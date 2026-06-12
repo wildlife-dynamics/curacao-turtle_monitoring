@@ -1,0 +1,45 @@
+id:
+
+requirements:
+  - name: ecoscope-workflows-core
+    version: "0.22.18.*"
+    channel: https://repo.prefix.dev/ecoscope-workflows/
+
+  - name: ecoscope-workflows-ext-ecoscope
+    version: "0.22.18.*"
+    channel: https://repo.prefix.dev/ecoscope-workflows/
+
+  - name: ecoscope-workflows-ext-custom
+    version: "0.0.46"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+
+task-instance-defaults:
+  skipif:
+    conditions:
+      - any_is_empty_df
+      - any_dependency_skipped
+
+workflow:
+  - name: Workflow Details
+    id: workflow_details
+    task: set_workflow_details
+
+  - name: Data Source
+    id: er_client
+    task: set_er_connection
+
+  - name: Time Range
+    id: time_range
+    task: set_time_range
+    partial:
+      time_format: "%d %b %Y"
+
+  - name: Base Maps
+    id: base_maps
+    task: set_base_maps_pydeck
+
+  - name: Groupers
+    id: groupers
+    task: set_groupers
+    partial:
+      groupers: []
