@@ -1,0 +1,413 @@
+{
+  "json": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "activity_id": {
+        "deprecated": false,
+        "title": "Activity id",
+        "default": "",
+        "description": "Activity id example 250815-MB-D-2 your activity is recorded on 15-Aug-2025 on Mermaid beac it is a dry run and it is the second activity of the day for that patrol",
+        "type": "string"
+      },
+      "date_and_time": {
+        "deprecated": false,
+        "title": "Date and time",
+        "description": "",
+        "format": "date-time",
+        "type": "string"
+      },
+      "observers": {
+        "deprecated": false,
+        "title": "Observers",
+        "default": "",
+        "description": "",
+        "type": "string"
+      },
+      "location": {
+        "deprecated": false,
+        "title": "Location",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activitylocation"
+          }
+        ],
+        "type": "string"
+      },
+      "beach": {
+        "deprecated": false,
+        "title": "Beach",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=location"
+          }
+        ],
+        "type": "string"
+      },
+      "other": {
+        "deprecated": false,
+        "title": "Other",
+        "default": "",
+        "description": "ONLY USE WHEN LOCATION IS NOT IN LIST ABOVE",
+        "type": "string"
+      },
+      "species": {
+        "deprecated": false,
+        "title": "Species",
+        "description": "Hawksbill and Loggerhead asymmetrical Green and Leatherback symmetrical",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activityspecies"
+          }
+        ],
+        "type": "string"
+      },
+      "crawl_width_cm": {
+        "deprecated": false,
+        "title": "Crawl width (cm)",
+        "description": "",
+        "type": "number"
+      },
+      "crawl_length_m": {
+        "deprecated": false,
+        "title": "Crawl length (m)",
+        "description": "",
+        "type": "number"
+      },
+      "crawl_pattern": {
+        "deprecated": false,
+        "title": "Crawl pattern",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activitycrawlpattern"
+          }
+        ],
+        "type": "string"
+      },
+      "freshness": {
+        "deprecated": false,
+        "title": "Freshness",
+        "description": "Same night: Clear fresh track no footprints in it 1 night: Clear track some footprints in it eroding away 2 nights: Barely visible track but still clear enough NTBD: No clear track visible ",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activityfreshness"
+          }
+        ],
+        "type": "string"
+      },
+      "pictures": {
+        "deprecated": false,
+        "title": "Pictures",
+        "description": "Make sure the track is clearly visible ",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "/api/v2.0/schemas/choices.json?field=drypictures"
+            }
+          ],
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      },
+      "checklist": {
+        "deprecated": false,
+        "title": "Checklist ",
+        "description": "",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "/api/v2.0/schemas/choices.json?field=drychecklist"
+            }
+          ],
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      }
+    },
+    "required": [
+      "activity_id",
+      "date_and_time",
+      "observers",
+      "location",
+      "beach",
+      "species",
+      "crawl_width_cm",
+      "crawl_length_m",
+      "crawl_pattern",
+      "freshness",
+      "pictures",
+      "checklist"
+    ],
+    "type": "object",
+    "unevaluatedProperties": false
+  },
+  "ui": {
+    "fields": {
+      "activity_id": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": "yymmdd-beach-D-nr of activity"
+      },
+      "date_and_time": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "DATE_TIME"
+      },
+      "observers": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "location": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activitylocation"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "beach": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "location"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "other": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "species": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activityspecies"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "crawl_width_cm": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "crawl_length_m": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "crawl_pattern": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activitycrawlpattern"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "freshness": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activityfreshness"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "pictures": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "drypictures"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "checklist": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "drychecklist"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      }
+    },
+    "headers": {
+      "header-1": {
+        "label": "Dry run: The turtle crawled over the beach and returned without making a body pit. ",
+        "section": "section-1",
+        "size": "LARGE"
+      }
+    },
+    "order": [
+      "section-1",
+      "section-2",
+      "section-3"
+    ],
+    "sections": {
+      "section-1": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "General information",
+        "leftColumn": [
+          {
+            "name": "header-1",
+            "type": "header"
+          },
+          {
+            "name": "activity_id",
+            "type": "field"
+          },
+          {
+            "name": "date_and_time",
+            "type": "field"
+          },
+          {
+            "name": "observers",
+            "type": "field"
+          },
+          {
+            "name": "location",
+            "type": "field"
+          },
+          {
+            "name": "beach",
+            "type": "field"
+          },
+          {
+            "name": "other",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-2": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "",
+        "leftColumn": [
+          {
+            "name": "species",
+            "type": "field"
+          },
+          {
+            "name": "crawl_width_cm",
+            "type": "field"
+          },
+          {
+            "name": "crawl_length_m",
+            "type": "field"
+          },
+          {
+            "name": "crawl_pattern",
+            "type": "field"
+          },
+          {
+            "name": "freshness",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-3": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "Pictures and Checklist",
+        "leftColumn": [
+          {
+            "name": "pictures",
+            "type": "field"
+          },
+          {
+            "name": "checklist",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      }
+    }
+  }
+}

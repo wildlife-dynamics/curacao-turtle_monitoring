@@ -1,0 +1,548 @@
+{
+  "json": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "activity_id": {
+        "deprecated": false,
+        "title": "Activity id",
+        "default": "",
+        "description": "Activity id example 250815-TB-A-3 your activity is recorded on 15-Aug-2025 on Turtle beach it is a attempt and it is the third activity of the day for that patrol",
+        "type": "string"
+      },
+      "date_and_time": {
+        "deprecated": false,
+        "title": "Date and time",
+        "description": "",
+        "format": "date-time",
+        "type": "string"
+      },
+      "observers": {
+        "deprecated": false,
+        "title": "Observers",
+        "default": "",
+        "description": "",
+        "type": "string"
+      },
+      "location": {
+        "deprecated": false,
+        "title": "Location",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activitylocation"
+          }
+        ],
+        "type": "string"
+      },
+      "beach": {
+        "deprecated": false,
+        "title": "Beach",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=location"
+          }
+        ],
+        "type": "string"
+      },
+      "other": {
+        "deprecated": false,
+        "title": "Other",
+        "default": "",
+        "description": "ONLY USE WHEN LOCATION IS NOT IN LIST ABOVE",
+        "type": "string"
+      },
+      "specie": {
+        "deprecated": false,
+        "title": "Specie",
+        "description": "Hawksbill and Loggerhead asymmetrical Green and Leatherback symmetrical",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activityspecies"
+          }
+        ],
+        "type": "string"
+      },
+      "crawl_width_cm": {
+        "deprecated": false,
+        "title": "Crawl width (cm)",
+        "description": "",
+        "minimum": 50,
+        "type": "number"
+      },
+      "crawl_lenght_m": {
+        "deprecated": false,
+        "title": "Crawl lenght (m)",
+        "description": "",
+        "type": "number"
+      },
+      "crawl_pattern": {
+        "deprecated": false,
+        "title": "Crawl pattern",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activitycrawlpattern"
+          }
+        ],
+        "type": "string"
+      },
+      "freshness": {
+        "deprecated": false,
+        "title": "Freshness",
+        "description": "Same night: Clear fresh track no footprints in it 1 night: Clear track some footprints in it eroding away 2 nights: Barely visible track but still clear enough NTBD: No clear track visible ",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activityfreshness"
+          }
+        ],
+        "type": "string"
+      },
+      "number_of_body_pits": {
+        "deprecated": false,
+        "title": "Number of body pits",
+        "description": "",
+        "type": "number"
+      },
+      "triangulation_item_1": {
+        "deprecated": false,
+        "title": "Triangulation item 1",
+        "default": "",
+        "description": "DON'T USE A MOVABLE ITEM",
+        "type": "string"
+      },
+      "triangulation_in_meters_1": {
+        "deprecated": false,
+        "title": "Triangulation in meters 1",
+        "description": "",
+        "type": "number"
+      },
+      "triangulation_item_2": {
+        "deprecated": false,
+        "title": "Triangulation item 2",
+        "default": "",
+        "description": "DON'T USE A MOVABLE ITEM",
+        "type": "string"
+      },
+      "triangulation_in_meters_2": {
+        "deprecated": false,
+        "title": "Triangulation in meters 2",
+        "description": "",
+        "type": "number"
+      },
+      "triangulation_item_3": {
+        "deprecated": false,
+        "title": "Triangulation item 3",
+        "default": "",
+        "description": "DON'T USE A MOVABLE ITEM",
+        "type": "string"
+      },
+      "triangulation_in_meters_3": {
+        "deprecated": false,
+        "title": "Triangulation in meters 3",
+        "description": "",
+        "type": "number"
+      },
+      "pictures": {
+        "deprecated": false,
+        "title": "Pictures",
+        "description": "Make sure the track is clearly visible ",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "/api/v2.0/schemas/choices.json?field=attemptpictures"
+            }
+          ],
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      },
+      "checklist": {
+        "deprecated": false,
+        "title": "Checklist",
+        "description": "",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "/api/v2.0/schemas/choices.json?field=activitychecklist"
+            }
+          ],
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      }
+    },
+    "required": [
+      "activity_id",
+      "date_and_time",
+      "observers",
+      "location",
+      "beach",
+      "specie",
+      "crawl_width_cm",
+      "crawl_lenght_m",
+      "crawl_pattern",
+      "freshness",
+      "number_of_body_pits",
+      "triangulation_item_1",
+      "triangulation_in_meters_1",
+      "triangulation_item_2",
+      "triangulation_in_meters_2",
+      "triangulation_item_3",
+      "triangulation_in_meters_3",
+      "pictures",
+      "checklist"
+    ],
+    "type": "object",
+    "unevaluatedProperties": false
+  },
+  "ui": {
+    "fields": {
+      "activity_id": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": "yymmdd-beach-D-nr of activity"
+      },
+      "date_and_time": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "DATE_TIME"
+      },
+      "observers": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "location": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activitylocation"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "beach": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "location"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "other": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "specie": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activityspecies"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "crawl_width_cm": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "crawl_lenght_m": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "crawl_pattern": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activitycrawlpattern"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "freshness": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activityfreshness"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "number_of_body_pits": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "triangulation_item_1": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "triangulation_in_meters_1": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "triangulation_item_2": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "triangulation_in_meters_2": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "triangulation_item_3": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "triangulation_in_meters_3": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "pictures": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "attemptpictures"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "checklist": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activitychecklist"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      }
+    },
+    "headers": {
+      "header-1": {
+        "label": "Attempt: The turtle made one or more body pits, but didn’t lay eggs. ",
+        "section": "section-4",
+        "size": "MEDIUM"
+      },
+      "header-2": {
+        "label": "Pick three objects to triangulate from write down the object at Triangulation item and the distance from the nest to the item at Triangulation in meters",
+        "section": "section-3",
+        "size": "SMALL"
+      }
+    },
+    "order": [
+      "section-4",
+      "section-3",
+      "section-1"
+    ],
+    "sections": {
+      "section-4": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "",
+        "leftColumn": [
+          {
+            "name": "header-1",
+            "type": "header"
+          },
+          {
+            "name": "activity_id",
+            "type": "field"
+          },
+          {
+            "name": "date_and_time",
+            "type": "field"
+          },
+          {
+            "name": "observers",
+            "type": "field"
+          },
+          {
+            "name": "location",
+            "type": "field"
+          },
+          {
+            "name": "beach",
+            "type": "field"
+          },
+          {
+            "name": "other",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-3": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "",
+        "leftColumn": [
+          {
+            "name": "specie",
+            "type": "field"
+          },
+          {
+            "name": "crawl_width_cm",
+            "type": "field"
+          },
+          {
+            "name": "crawl_lenght_m",
+            "type": "field"
+          },
+          {
+            "name": "crawl_pattern",
+            "type": "field"
+          },
+          {
+            "name": "freshness",
+            "type": "field"
+          },
+          {
+            "name": "number_of_body_pits",
+            "type": "field"
+          },
+          {
+            "name": "header-2",
+            "type": "header"
+          },
+          {
+            "name": "triangulation_item_1",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_in_meters_1",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_item_2",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_in_meters_2",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_item_3",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_in_meters_3",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-1": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "Pictures and Checklist",
+        "leftColumn": [
+          {
+            "name": "pictures",
+            "type": "field"
+          },
+          {
+            "name": "checklist",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      }
+    }
+  }
+}

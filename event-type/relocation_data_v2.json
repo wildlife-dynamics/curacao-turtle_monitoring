@@ -1,0 +1,612 @@
+{
+  "json": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "properties": {
+      "activity_id": {
+        "deprecated": false,
+        "title": "Activity id",
+        "default": "",
+        "description": "",
+        "type": "string"
+      },
+      "date": {
+        "deprecated": false,
+        "title": "Date",
+        "description": "",
+        "format": "date",
+        "type": "string"
+      },
+      "observers": {
+        "deprecated": false,
+        "title": "Observers",
+        "default": "",
+        "description": "",
+        "type": "string"
+      },
+      "location": {
+        "deprecated": false,
+        "title": "Location",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=activitylocation"
+          }
+        ],
+        "type": "string"
+      },
+      "beach": {
+        "deprecated": false,
+        "title": "Beach",
+        "description": "",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=location"
+          }
+        ],
+        "type": "string"
+      },
+      "other": {
+        "deprecated": false,
+        "title": "Other",
+        "default": "",
+        "description": "ONLY USE WHEN LOCATION IS NOT IN LIST ABOVE",
+        "type": "string"
+      },
+      "reburial_site": {
+        "deprecated": false,
+        "title": "Reburial site",
+        "description": "Reburial site: The locatin where you will relocate the eggs to most of the time this will be the same as your beach.",
+        "anyOf": [
+          {
+            "$ref": "/api/v2.0/schemas/choices.json?field=location"
+          }
+        ],
+        "type": "string"
+      },
+      "other1": {
+        "deprecated": false,
+        "title": "Other",
+        "default": "",
+        "description": "ONLY USE WHEN LOCATION IS NOT IN LIST ABOVE",
+        "type": "string"
+      },
+      "time_collected": {
+        "deprecated": false,
+        "title": "Time collected",
+        "description": "",
+        "format": "time",
+        "type": "string"
+      },
+      "depth_of_original_egg_chamber_cm": {
+        "deprecated": false,
+        "title": "Depth of original egg chamber (cm)",
+        "description": "",
+        "type": "number"
+      },
+      "width_of_original_egg_chamber_cm": {
+        "deprecated": false,
+        "title": "Width of original egg chamber (cm)",
+        "description": "",
+        "type": "number"
+      },
+      "total_number_of_eggs": {
+        "deprecated": false,
+        "title": "Total number of eggs",
+        "default": "",
+        "description": "",
+        "type": "string"
+      },
+      "depth_of_new_egg_chamber_cm": {
+        "deprecated": false,
+        "title": "Depth of new egg chamber (cm)",
+        "description": "",
+        "type": "number"
+      },
+      "width_of_new_egg_chamber_cm": {
+        "deprecated": false,
+        "title": "Width of new egg chamber (cm)",
+        "description": "",
+        "type": "number"
+      },
+      "total_number_of_eggs2": {
+        "deprecated": false,
+        "title": "Total number of eggs",
+        "description": "",
+        "type": "number"
+      },
+      "time_reburied": {
+        "deprecated": false,
+        "title": "Time reburied",
+        "description": "",
+        "format": "time",
+        "type": "string"
+      },
+      "distance_to_high_water_line": {
+        "deprecated": false,
+        "title": "Distance to high water line",
+        "description": "High water line: markings left on the beach by the last high tide",
+        "type": "number"
+      },
+      "triangulation_item_1": {
+        "deprecated": false,
+        "title": "Triangulation item 1",
+        "default": "",
+        "description": "DON'T USE A MOVABLE ITEM",
+        "type": "string"
+      },
+      "triangulation_in_meters_1": {
+        "deprecated": false,
+        "title": "Triangulation in meters 1",
+        "description": "",
+        "type": "number"
+      },
+      "triangulation_item_2": {
+        "deprecated": false,
+        "title": "Triangulation item 2",
+        "default": "",
+        "description": "DON'T USE A MOVABLE ITEM",
+        "type": "string"
+      },
+      "triangulation_in_meters_2": {
+        "deprecated": false,
+        "title": "Triangulation in meters 2",
+        "description": "",
+        "type": "number"
+      },
+      "triangulation_item_3": {
+        "deprecated": false,
+        "title": "Triangulation item 3",
+        "default": "",
+        "description": "DON'T USE A MOVABLE ITEM",
+        "type": "string"
+      },
+      "triangulation_in_meters_3": {
+        "deprecated": false,
+        "title": "Triangulation in meters 3",
+        "description": "",
+        "type": "number"
+      },
+      "pictures": {
+        "deprecated": false,
+        "title": "Pictures",
+        "description": "",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "/api/v2.0/schemas/choices.json?field=relocdatapictures"
+            }
+          ],
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      },
+      "checklist": {
+        "deprecated": false,
+        "title": "Checklist ",
+        "description": "",
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "/api/v2.0/schemas/choices.json?field=relocdatachecklist"
+            }
+          ],
+          "type": "string"
+        },
+        "type": "array",
+        "uniqueItems": true
+      }
+    },
+    "required": [
+      "activity_id",
+      "date",
+      "observers",
+      "location",
+      "beach",
+      "reburial_site",
+      "time_collected",
+      "depth_of_original_egg_chamber_cm",
+      "width_of_original_egg_chamber_cm",
+      "total_number_of_eggs",
+      "depth_of_new_egg_chamber_cm",
+      "width_of_new_egg_chamber_cm",
+      "total_number_of_eggs2",
+      "time_reburied",
+      "distance_to_high_water_line",
+      "triangulation_item_1",
+      "triangulation_in_meters_1",
+      "triangulation_item_2",
+      "triangulation_in_meters_2",
+      "triangulation_item_3",
+      "triangulation_in_meters_3",
+      "pictures",
+      "checklist"
+    ],
+    "type": "object",
+    "unevaluatedProperties": false
+  },
+  "ui": {
+    "fields": {
+      "activity_id": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": "Original activity id + R"
+      },
+      "date": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "DATE_TIME"
+      },
+      "observers": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "location": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "activitylocation"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "beach": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "location"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "other": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "reburial_site": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "location"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "other1": {
+        "conditionalDependents": [],
+        "parent": "section-1",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "time_collected": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "DATE_TIME"
+      },
+      "depth_of_original_egg_chamber_cm": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "width_of_original_egg_chamber_cm": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "total_number_of_eggs": {
+        "conditionalDependents": [],
+        "parent": "section-3",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "depth_of_new_egg_chamber_cm": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "width_of_new_egg_chamber_cm": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "total_number_of_eggs2": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "time_reburied": {
+        "conditionalDependents": [],
+        "parent": "section-2",
+        "type": "DATE_TIME"
+      },
+      "distance_to_high_water_line": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "triangulation_item_1": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "triangulation_in_meters_1": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "triangulation_item_2": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "triangulation_in_meters_2": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "triangulation_item_3": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "TEXT",
+        "inputType": "SHORT_TEXT",
+        "placeholder": ""
+      },
+      "triangulation_in_meters_3": {
+        "conditionalDependents": [],
+        "parent": "section-4",
+        "type": "NUMERIC",
+        "placeholder": ""
+      },
+      "pictures": {
+        "conditionalDependents": [],
+        "parent": "section-5",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "relocdatapictures"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      },
+      "checklist": {
+        "conditionalDependents": [],
+        "parent": "section-5",
+        "type": "CHOICE_LIST",
+        "choices": {
+          "eventTypeCategories": [],
+          "existingChoiceList": [
+            "relocdatachecklist"
+          ],
+          "featureCategories": [],
+          "myDataType": "EVENT_TYPES_FROM_EVENT_CATEGORY",
+          "subjectGroups": [],
+          "subjectSubtypes": [],
+          "type": "EXISTING_CHOICE_LIST"
+        },
+        "inputType": "DROPDOWN",
+        "placeholder": ""
+      }
+    },
+    "headers": {
+      "header-1": {
+        "label": "Pick three objects to triangulate from write down the object at Triangulation item and the distance from the nest to the item at Triangulation in meters",
+        "section": "section-4",
+        "size": "SMALL"
+      }
+    },
+    "order": [
+      "section-1",
+      "section-3",
+      "section-2",
+      "section-4",
+      "section-5"
+    ],
+    "sections": {
+      "section-1": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "",
+        "leftColumn": [
+          {
+            "name": "activity_id",
+            "type": "field"
+          },
+          {
+            "name": "date",
+            "type": "field"
+          },
+          {
+            "name": "observers",
+            "type": "field"
+          },
+          {
+            "name": "location",
+            "type": "field"
+          },
+          {
+            "name": "beach",
+            "type": "field"
+          },
+          {
+            "name": "other",
+            "type": "field"
+          },
+          {
+            "name": "reburial_site",
+            "type": "field"
+          },
+          {
+            "name": "other1",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-3": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "",
+        "leftColumn": [
+          {
+            "name": "time_collected",
+            "type": "field"
+          },
+          {
+            "name": "depth_of_original_egg_chamber_cm",
+            "type": "field"
+          },
+          {
+            "name": "width_of_original_egg_chamber_cm",
+            "type": "field"
+          },
+          {
+            "name": "total_number_of_eggs",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-2": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "",
+        "leftColumn": [
+          {
+            "name": "depth_of_new_egg_chamber_cm",
+            "type": "field"
+          },
+          {
+            "name": "width_of_new_egg_chamber_cm",
+            "type": "field"
+          },
+          {
+            "name": "total_number_of_eggs2",
+            "type": "field"
+          },
+          {
+            "name": "time_reburied",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-4": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "",
+        "leftColumn": [
+          {
+            "name": "distance_to_high_water_line",
+            "type": "field"
+          },
+          {
+            "name": "header-1",
+            "type": "header"
+          },
+          {
+            "name": "triangulation_item_1",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_in_meters_1",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_item_2",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_in_meters_2",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_item_3",
+            "type": "field"
+          },
+          {
+            "name": "triangulation_in_meters_3",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      },
+      "section-5": {
+        "columns": 1,
+        "conditions": [],
+        "isActive": true,
+        "label": "Pictures and Checklist",
+        "leftColumn": [
+          {
+            "name": "pictures",
+            "type": "field"
+          },
+          {
+            "name": "checklist",
+            "type": "field"
+          }
+        ],
+        "rightColumn": []
+      }
+    }
+  }
+}
