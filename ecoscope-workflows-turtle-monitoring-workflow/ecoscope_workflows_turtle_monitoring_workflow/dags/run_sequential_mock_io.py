@@ -51,9 +51,6 @@ from ecoscope_workflows_core.tasks.results import (
 from ecoscope_workflows_core.tasks.skip import never as never
 from ecoscope_workflows_core.tasks.transformation import filter_df as filter_df
 from ecoscope_workflows_ext_curacao.tasks import (
-    aggregate_nesting_by_month_species as aggregate_nesting_by_month_species,
-)
-from ecoscope_workflows_ext_curacao.tasks import (
     apply_qualitative_color_map as apply_qualitative_color_map,
 )
 from ecoscope_workflows_ext_curacao.tasks import (
@@ -93,10 +90,10 @@ from ecoscope_workflows_ext_custom.tasks.results import draw_map as draw_map
 from ecoscope_workflows_ext_custom.tasks.transformation import (
     filter_row_values as filter_row_values,
 )
-from ecoscope_workflows_ext_ecoscope.tasks.results import (
-    draw_line_chart as draw_line_chart,
-)
 from ecoscope_workflows_ext_ecoscope.tasks.results import draw_table as draw_table
+from ecoscope_workflows_ext_ecoscope.tasks.results import (
+    draw_time_series_bar_chart as draw_time_series_bar_chart,
+)
 
 from ..params import Params
 
@@ -641,6 +638,7 @@ def main(params: Params):
             df=map_nesting_data,
             input_column_name="event_type_display",
             colormap="Set1",
+            custom_colors=None,
             **(params_dict.get("nesting_colormap") or {}),
         )
         .call()
@@ -741,24 +739,8 @@ def main(params: Params):
         .call()
     )
 
-    nesting_over_time_agg = (
-        aggregate_nesting_by_month_species.validate()
-        .set_task_instance_id("nesting_over_time_agg")
-        .handle_errors()
-        .with_tracing()
-        .skipif(
-            conditions=[
-                any_is_empty_df,
-                any_dependency_skipped,
-            ],
-            unpack_depth=1,
-        )
-        .partial(df=nesting_data, **(params_dict.get("nesting_over_time_agg") or {}))
-        .call()
-    )
-
     nesting_over_time_chart = (
-        draw_line_chart.validate()
+        draw_time_series_bar_chart.validate()
         .set_task_instance_id("nesting_over_time_chart")
         .handle_errors()
         .with_tracing()
@@ -770,14 +752,19 @@ def main(params: Params):
             unpack_depth=1,
         )
         .partial(
-            dataframe=nesting_over_time_agg,
-            x_column="time",
-            y_column="count",
-            category_column="specie",
-            layout_kwargs={
+            dataframe=nesting_data,
+            x_axis="time",
+            y_axis="count",
+            category="specie",
+            agg_function="sum",
+            time_interval="month",
+            color_column=None,
+            layout_style={
+                "barmode": "group",
                 "xaxis": {"title": "Month"},
                 "yaxis": {"title": "Nesting Events"},
             },
+            plot_style=None,
             widget_id="nesting_over_time_widget",
             **(params_dict.get("nesting_over_time_chart") or {}),
         )
@@ -1080,6 +1067,7 @@ def main(params: Params):
             df=turtle_data,
             input_column_name="activity_type",
             colormap="Set2",
+            custom_colors=None,
             **(params_dict.get("turtle_colormap") or {}),
         )
         .call()

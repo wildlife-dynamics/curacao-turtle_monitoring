@@ -276,82 +276,6 @@
       "type": "object",
       "required": [],
       "title": "Base Maps"
-    },
-    "nesting_colormap": {
-      "additionalProperties": false,
-      "properties": {
-        "custom_colors": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "title": "Custom Colors",
-          "description": "Optional hex color list. Leave empty to use the palette above."
-        }
-      },
-      "required": [],
-      "type": "object",
-      "title": "Color Map - Nesting Activity"
-    },
-    "nesting_over_time_chart": {
-      "additionalProperties": false,
-      "properties": {
-        "line_kwargs": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/LineStyle"
-            }
-          ],
-          "default": null,
-          "title": "Line Kwargs",
-          "description": "Line style settings",
-          "ecoscope:advanced": true
-        },
-        "smoothing": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/SmoothingConfig"
-            }
-          ],
-          "default": null,
-          "title": "Smoothing",
-          "description": "Configuration for line smoothing. When set, creates a smoothed line with original data point markers.",
-          "ecoscope:advanced": true
-        }
-      },
-      "required": [],
-      "type": "object",
-      "title": "Nesting Activity Over Time Chart"
-    },
-    "turtle_colormap": {
-      "additionalProperties": false,
-      "properties": {
-        "custom_colors": {
-          "anyOf": [
-            {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "title": "Custom Colors",
-          "description": "Optional hex color list. Leave empty to use the palette above."
-        }
-      },
-      "required": [],
-      "type": "object",
-      "title": "Color Map - Turtle Activity"
     }
   },
   "$defs": {
@@ -395,75 +319,6 @@
       ],
       "title": "TimezoneInfo",
       "type": "object"
-    },
-    "LineStyle": {
-      "properties": {
-        "color": {
-          "default": null,
-          "ecoscope:advanced": true,
-          "title": "Color",
-          "type": "string"
-        },
-        "dash": {
-          "default": null,
-          "ecoscope:advanced": true,
-          "title": "Dash",
-          "type": "string"
-        },
-        "shape": {
-          "default": null,
-          "ecoscope:advanced": true,
-          "title": "Shape",
-          "type": "string"
-        }
-      },
-      "title": "LineStyle",
-      "type": "object"
-    },
-    "SmoothingConfig": {
-      "description": "Configuration for data smoothing.",
-      "properties": {
-        "method": {
-          "const": "spline",
-          "default": "spline",
-          "description": "The smoothing method to apply. Currently supports 'spline'.",
-          "enum": [
-            "spline"
-          ],
-          "title": "Method",
-          "type": "string"
-        },
-        "y_min": {
-          "default": null,
-          "description": "The minimum value to clamp smoothed values to. Useful for data like precipitation where values should not go below zero.",
-          "ecoscope:advanced": true,
-          "title": "Y Min",
-          "type": "number"
-        },
-        "y_max": {
-          "default": null,
-          "description": "The maximum value to clamp smoothed values to.",
-          "ecoscope:advanced": true,
-          "title": "Y Max",
-          "type": "number"
-        },
-        "resolution": {
-          "default": 10,
-          "description": "The resolution multiplier for interpolation points. The number of output points will be len(x) * resolution.",
-          "ecoscope:advanced": true,
-          "title": "Resolution",
-          "type": "integer"
-        },
-        "degree": {
-          "default": 3,
-          "description": "The degree of the spline. 1: Linear, 2: Quadratic, 3: Cubic (recommended), 4-5: Higher degree.",
-          "ecoscope:advanced": true,
-          "title": "Degree",
-          "type": "integer"
-        }
-      },
-      "title": "SmoothingConfig",
-      "type": "object"
     }
   },
   "uiSchema": {
@@ -480,20 +335,11 @@
         "timezone"
       ]
     },
-    "nesting_over_time_chart": {
-      "ui:order": [
-        "line_kwargs",
-        "smoothing"
-      ]
-    },
     "ui:order": [
       "workflow_details",
       "er_client",
       "time_range",
-      "base_maps",
-      "nesting_colormap",
-      "nesting_over_time_chart",
-      "turtle_colormap"
+      "base_maps"
     ]
   },
   "additionalProperties": false
