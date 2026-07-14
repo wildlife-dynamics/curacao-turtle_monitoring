@@ -1,16 +1,12 @@
 id: turtle_monitoring
 
 requirements:
-  - name: ecoscope-workflows-core
-    version: "0.22.18.*"
-    channel: https://repo.prefix.dev/ecoscope-workflows/
-
-  - name: ecoscope-workflows-ext-ecoscope
-    version: "0.22.18.*"
+  - name: ecoscope-platform
+    version: ">=2.15.0,<2.16.2"
     channel: https://repo.prefix.dev/ecoscope-workflows/
 
   - name: ecoscope-workflows-ext-custom
-    version: "0.0.56"
+    version: "0.1.0rc15"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
   - name: pydeck
@@ -285,7 +281,7 @@ workflow:
 
       - name: Nesting Points Layer
         id: nesting_layer
-        task: create_scatterplot_layer
+        task: ecoscope_workflows_ext_custom.tasks.results.create_scatterplot_layer
         partial:
           geodataframe: ${{ workflow.nesting_colormap.return }}
           layer_style:
@@ -300,7 +296,7 @@ workflow:
 
       - name: Nesting Activity Map
         id: nesting_map
-        task: draw_map
+        task: ecoscope_workflows_ext_custom.tasks.results.draw_map
         partial:
           geo_layers: ${{ workflow.nesting_layer.return }}
           tile_layers: ${{ workflow.base_maps.return }}
@@ -315,7 +311,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.nesting_map.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: nesting_map
 
       - name: Nesting Activity Map Widget
@@ -352,7 +348,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.nesting_over_time_chart.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: nesting_over_time
 
       - name: Nesting Activity Over Time Widget
@@ -383,7 +379,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.nesting_by_beach_drawn.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: nesting_by_beach
 
       - name: Nesting by Beach Widget
@@ -414,7 +410,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.nest_success_sp_beach_drawn.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: nesting_success_species_beach
 
       - name: Nesting Success by Species & Beach Widget
@@ -445,7 +441,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.nest_success_manip_drawn.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: nesting_success_manipulation
 
       - name: Nesting Success by Manipulation Widget
@@ -475,7 +471,7 @@ workflow:
 
       - name: Turtle Events Layer
         id: turtle_layer
-        task: create_scatterplot_layer
+        task: ecoscope_workflows_ext_custom.tasks.results.create_scatterplot_layer
         partial:
           geodataframe: ${{ workflow.turtle_colormap.return }}
           layer_style:
@@ -490,7 +486,7 @@ workflow:
 
       - name: Turtle Events Map
         id: turtle_map
-        task: draw_map
+        task: ecoscope_workflows_ext_custom.tasks.results.draw_map
         partial:
           geo_layers: ${{ workflow.turtle_layer.return }}
           tile_layers: ${{ workflow.base_maps.return }}
@@ -505,7 +501,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.turtle_map.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: turtle_map
 
       - name: Turtle Events Map Widget
@@ -536,7 +532,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.turtle_events_by_location_drawn.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: turtle_events_by_location
 
       - name: Turtle Events by Location Widget
@@ -573,7 +569,7 @@ workflow:
         task: persist_text
         partial:
           text: ${{ workflow.fp_by_location_drawn.return }}
-          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          root_path: ${{ env.WT_RESULTS }}
           filename_suffix: fp_by_location
 
       - name: FP by Location Widget

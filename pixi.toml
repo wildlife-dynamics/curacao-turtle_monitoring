@@ -11,22 +11,3 @@ platforms = ['linux-64', 'osx-arm64', 'osx-64', 'win-64']
 [dependencies]
 curl = "*"
 yq = "*"
-
-[feature.compile.dependencies]
-ecoscope-workflows-core = "0.22.18.*"
-ecoscope-workflows-ext-ecoscope = "0.22.18.*"
-ecoscope-workflows-ext-custom = "0.0.56"
-pydeck = "0.9.2"
-
-[feature.compile.dependencies.ecoscope-workflows-ext-curacao]
-version = "0.0.0.*"
-channel = "file:///tmp/ecoscope-workflows-custom/release/artifacts/"
-
-[environments]
-compile = { features = ["compile"], solve-group = "compile", no-default-feature = true }
-
-[feature.compile.tasks.compile]
-cmd = './dev/recompile.sh --install'
-
-[feature.compile.tasks.recompile]
-cmd = './dev/recompile.sh --update'
