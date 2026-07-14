@@ -19,7 +19,7 @@ requirements:
 
   - name: ecoscope-workflows-ext-curacao
     version: "0.0.0.*"
-    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+    channel: file:///tmp/ecoscope-workflows-custom/release/artifacts/
 
 task-instance-defaults:
   skipif:
@@ -281,6 +281,7 @@ workflow:
           df: ${{ workflow.map_nesting_data.return }}
           input_column_name: event_type_display
           colormap: Set1
+          custom_colors: null
 
       - name: Nesting Points Layer
         id: nesting_layer
@@ -327,25 +328,24 @@ workflow:
           title: "Nesting Activity Map"
           data: ${{ workflow.persist_nesting_map.return }}
 
-      - name: Aggregate Nesting by Month and Species
-        id: nesting_over_time_agg
-        task: aggregate_nesting_by_month_species
-        partial:
-          df: ${{ workflow.nesting_data.return }}
-
       - name: Nesting Activity Over Time Chart
         id: nesting_over_time_chart
-        task: draw_line_chart
+        task: draw_time_series_bar_chart
         partial:
-          dataframe: ${{ workflow.nesting_over_time_agg.return }}
-          x_column: time
-          y_column: count
-          category_column: specie
-          layout_kwargs:
+          dataframe: ${{ workflow.nesting_data.return }}
+          x_axis: time
+          y_axis: count
+          category: specie
+          agg_function: sum
+          time_interval: month
+          color_column: null
+          layout_style:
+            barmode: group
             xaxis:
               title: "Month"
             yaxis:
               title: "Nesting Events"
+          plot_style: null
           widget_id: "nesting_over_time_widget"
 
       - id: persist_nesting_over_time
@@ -471,6 +471,7 @@ workflow:
           df: ${{ workflow.turtle_data.return }}
           input_column_name: activity_type
           colormap: Set2
+          custom_colors: null
 
       - name: Turtle Events Layer
         id: turtle_layer
