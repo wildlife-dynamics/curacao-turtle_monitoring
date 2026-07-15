@@ -185,6 +185,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             include_updates=False,
             include_related_events=False,
             include_null_geometry=False,
+            force_point_geometry=True,
             **(params.get("all_events") or {}),
         )
         .call()
