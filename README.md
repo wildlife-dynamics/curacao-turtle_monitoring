@@ -30,32 +30,3 @@ Monitors sea turtle nesting activity, hatching success, and turtle encounters ar
 | `hatching_data` | Hatching inspections with egg counts |
 | `relocation_data_v2` | Relocated nest records |
 | `turtle_data_form_v2` | Turtle encounter records (captures, rescues, strandings) |
-
-## Development
-
-### Prerequisites
-
-- [Pixi](https://pixi.sh)
-- Access to the Curacao EarthRanger instance
-
-### Compile
-
-```bash
-make compile
-```
-
-Builds `ecoscope-workflows-ext-curacao` locally and compiles `spec.yaml` into `ecoscope-workflows-turtle-monitoring-workflow/`.
-
-### Run
-
-```bash
-make run
-```
-
-Runs the workflow sequentially against live EarthRanger data. Outputs HTML widgets and `result.json` to `/tmp/workflows/curacao-turtle-monitoring/output/`.
-
-### Open outputs
-
-```bash
-make open
-```
