@@ -276,6 +276,21 @@
       "type": "object",
       "required": [],
       "title": "Base Maps"
+    },
+    "all_events": {
+      "additionalProperties": false,
+      "properties": {
+        "force_point_geometry": {
+          "default": true,
+          "title": "Force Point Geometry",
+          "type": "boolean",
+          "description": "If True, polygon/multipolygon event geometries are reduced to their centroid. Set False to preserve native geometry types.",
+          "ecoscope:advanced": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Fetch All Events"
     }
   },
   "$defs": {
@@ -339,7 +354,8 @@
       "workflow_details",
       "er_client",
       "time_range",
-      "base_maps"
+      "base_maps",
+      "all_events"
     ]
   },
   "additionalProperties": false

@@ -7,49 +7,55 @@ Lines specific to the testing context are marked with a test tube emoji (🧪) t
 that they would not be included (or would be different) in the production version of this file.
 """
 
-import json
 import os
 import warnings  # 🧪
+from typing import Any
 
-from ecoscope_workflows_core.tasks.config import (
-    set_workflow_details as set_workflow_details,
-)
-from ecoscope_workflows_core.tasks.filter import set_time_range as set_time_range
-from ecoscope_workflows_core.tasks.io import set_er_connection as set_er_connection
-from ecoscope_workflows_core.tasks.skip import (
+from ecoscope.platform.tasks.config import set_workflow_details as set_workflow_details
+from ecoscope.platform.tasks.filter import set_time_range as set_time_range
+from ecoscope.platform.tasks.io import set_er_connection as set_er_connection
+from ecoscope.platform.tasks.skip import (
     any_dependency_skipped as any_dependency_skipped,
 )
-from ecoscope_workflows_core.tasks.skip import any_is_empty_df as any_is_empty_df
-from ecoscope_workflows_core.testing import create_task_magicmock  # 🧪
+from ecoscope.platform.tasks.skip import any_is_empty_df as any_is_empty_df
 from ecoscope_workflows_ext_custom.tasks.results import (
     set_base_maps_pydeck as set_base_maps_pydeck,
 )
+from wt_contracts import validate as _validate
+from wt_task import task
+from wt_task.testing import create_func_magicmock  # 🧪
 
-get_events = create_task_magicmock(  # 🧪
-    anchor="ecoscope_workflows_ext_ecoscope.tasks.io",  # 🧪
+from .. import metadata as _metadata
+
+get_events = create_func_magicmock(  # 🧪
+    anchor="ecoscope.platform.tasks.io",  # 🧪
     func_name="get_events",  # 🧪
 )  # 🧪
 
-process_events_details = create_task_magicmock(  # 🧪
+process_events_details = create_func_magicmock(  # 🧪
     anchor="ecoscope_workflows_ext_custom.tasks.io",  # 🧪
     func_name="process_events_details",  # 🧪
 )  # 🧪
-from ecoscope_workflows_core.tasks.analysis import (
+from ecoscope.platform.tasks.analysis import (
     dataframe_column_sum as dataframe_column_sum,
 )
-from ecoscope_workflows_core.tasks.analysis import dataframe_count as dataframe_count
-from ecoscope_workflows_core.tasks.io import persist_text as persist_text
-from ecoscope_workflows_core.tasks.results import (
+from ecoscope.platform.tasks.analysis import dataframe_count as dataframe_count
+from ecoscope.platform.tasks.io import persist_text as persist_text
+from ecoscope.platform.tasks.results import (
     create_map_widget_single_view as create_map_widget_single_view,
 )
-from ecoscope_workflows_core.tasks.results import (
+from ecoscope.platform.tasks.results import (
     create_plot_widget_single_view as create_plot_widget_single_view,
 )
-from ecoscope_workflows_core.tasks.results import (
+from ecoscope.platform.tasks.results import (
     create_single_value_widget_single_view as create_single_value_widget_single_view,
 )
-from ecoscope_workflows_core.tasks.skip import never as never
-from ecoscope_workflows_core.tasks.transformation import filter_df as filter_df
+from ecoscope.platform.tasks.results import draw_table as draw_table
+from ecoscope.platform.tasks.results import (
+    draw_time_series_bar_chart as draw_time_series_bar_chart,
+)
+from ecoscope.platform.tasks.skip import never as never
+from ecoscope.platform.tasks.transformation import filter_df as filter_df
 from ecoscope_workflows_ext_curacao.tasks import (
     apply_qualitative_color_map as apply_qualitative_color_map,
 )
@@ -84,27 +90,23 @@ from ecoscope_workflows_ext_curacao.tasks import (
     gather_curacao_dashboard as gather_curacao_dashboard,
 )
 from ecoscope_workflows_ext_custom.tasks.results import (
-    create_scatterplot_layer as create_scatterplot_layer,
+    create_scatterplot_layer as create_scatterplot_layer_1,
 )
-from ecoscope_workflows_ext_custom.tasks.results import draw_map as draw_map
+from ecoscope_workflows_ext_custom.tasks.results import draw_map as draw_map_1
 from ecoscope_workflows_ext_custom.tasks.transformation import (
     filter_row_values as filter_row_values,
 )
-from ecoscope_workflows_ext_ecoscope.tasks.results import draw_table as draw_table
-from ecoscope_workflows_ext_ecoscope.tasks.results import (
-    draw_time_series_bar_chart as draw_time_series_bar_chart,
-)
-
-from ..params import Params
 
 
-def main(params: Params):
+def main(params: dict[str, Any], validate_params_schema: bool = True):
     warnings.warn("This test script should not be used in production!")  # 🧪
 
-    params_dict = json.loads(params.model_dump_json(exclude_unset=True))
+    if validate_params_schema:
+        _validate(params, _metadata.load_params_schema())
 
     workflow_details = (
-        set_workflow_details.validate()
+        task(set_workflow_details)
+        .validate()
         .set_task_instance_id("workflow_details")
         .handle_errors()
         .with_tracing()
@@ -115,12 +117,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(**(params_dict.get("workflow_details") or {}))
+        .partial(**(params.get("workflow_details") or {}))
         .call()
     )
 
     er_client = (
-        set_er_connection.validate()
+        task(set_er_connection)
+        .validate()
         .set_task_instance_id("er_client")
         .handle_errors()
         .with_tracing()
@@ -131,12 +134,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(**(params_dict.get("er_client") or {}))
+        .partial(**(params.get("er_client") or {}))
         .call()
     )
 
     time_range = (
-        set_time_range.validate()
+        task(set_time_range)
+        .validate()
         .set_task_instance_id("time_range")
         .handle_errors()
         .with_tracing()
@@ -147,12 +151,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(time_format="%d %b %Y", **(params_dict.get("time_range") or {}))
+        .partial(time_format="%d %b %Y", **(params.get("time_range") or {}))
         .call()
     )
 
     base_maps = (
-        set_base_maps_pydeck.validate()
+        task(set_base_maps_pydeck)
+        .validate()
         .set_task_instance_id("base_maps")
         .handle_errors()
         .with_tracing()
@@ -163,12 +168,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(**(params_dict.get("base_maps") or {}))
+        .partial(**(params.get("base_maps") or {}))
         .call()
     )
 
     all_events = (
-        get_events.validate()
+        task(get_events)
+        # 🧪 validation omitted for mocked IO task (returns pre-loaded example data)
         .set_task_instance_id("all_events")
         .handle_errors()
         .with_tracing()
@@ -197,13 +203,14 @@ def main(params: Params):
             include_updates=False,
             include_related_events=False,
             include_null_geometry=False,
-            **(params_dict.get("all_events") or {}),
+            **(params.get("all_events") or {}),
         )
         .call()
     )
 
     all_events_processed = (
-        process_events_details.validate()
+        task(process_events_details)
+        # 🧪 validation omitted for mocked IO task (returns pre-loaded example data)
         .set_task_instance_id("all_events_processed")
         .handle_errors()
         .with_tracing()
@@ -219,13 +226,14 @@ def main(params: Params):
             client=er_client,
             map_to_titles=False,
             ordered=False,
-            **(params_dict.get("all_events_processed") or {}),
+            **(params.get("all_events_processed") or {}),
         )
         .call()
     )
 
     nesting_events_raw = (
-        filter_row_values.validate()
+        task(filter_row_values)
+        .validate()
         .set_task_instance_id("nesting_events_raw")
         .handle_errors()
         .with_tracing()
@@ -240,13 +248,14 @@ def main(params: Params):
             df=all_events_processed,
             column="event_type",
             values=["suspected_nest_v2", "attempt_v2", "dry_run_v2"],
-            **(params_dict.get("nesting_events_raw") or {}),
+            **(params.get("nesting_events_raw") or {}),
         )
         .call()
     )
 
     map_nesting_events_raw = (
-        filter_row_values.validate()
+        task(filter_row_values)
+        .validate()
         .set_task_instance_id("map_nesting_events_raw")
         .handle_errors()
         .with_tracing()
@@ -261,13 +270,14 @@ def main(params: Params):
             df=all_events_processed,
             column="event_type",
             values=["suspected_nest_v2", "attempt_v2", "relocation_data_v2"],
-            **(params_dict.get("map_nesting_events_raw") or {}),
+            **(params.get("map_nesting_events_raw") or {}),
         )
         .call()
     )
 
     suspected_nest_events = (
-        filter_row_values.validate()
+        task(filter_row_values)
+        .validate()
         .set_task_instance_id("suspected_nest_events")
         .handle_errors()
         .with_tracing()
@@ -282,13 +292,14 @@ def main(params: Params):
             df=all_events_processed,
             column="event_type",
             values=["suspected_nest_v2"],
-            **(params_dict.get("suspected_nest_events") or {}),
+            **(params.get("suspected_nest_events") or {}),
         )
         .call()
     )
 
     hatching_events = (
-        filter_row_values.validate()
+        task(filter_row_values)
+        .validate()
         .set_task_instance_id("hatching_events")
         .handle_errors()
         .with_tracing()
@@ -303,13 +314,14 @@ def main(params: Params):
             df=all_events_processed,
             column="event_type",
             values=["hatching_data"],
-            **(params_dict.get("hatching_events") or {}),
+            **(params.get("hatching_events") or {}),
         )
         .call()
     )
 
     turtle_events = (
-        filter_row_values.validate()
+        task(filter_row_values)
+        .validate()
         .set_task_instance_id("turtle_events")
         .handle_errors()
         .with_tracing()
@@ -324,13 +336,14 @@ def main(params: Params):
             df=all_events_processed,
             column="event_type",
             values=["turtle_data_form_v2"],
-            **(params_dict.get("turtle_events") or {}),
+            **(params.get("turtle_events") or {}),
         )
         .call()
     )
 
     nesting_data = (
-        extract_nesting_fields.validate()
+        task(extract_nesting_fields)
+        .validate()
         .set_task_instance_id("nesting_data")
         .handle_errors()
         .with_tracing()
@@ -341,12 +354,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=nesting_events_raw, **(params_dict.get("nesting_data") or {}))
+        .partial(df=nesting_events_raw, **(params.get("nesting_data") or {}))
         .call()
     )
 
     map_nesting_data = (
-        extract_nesting_fields.validate()
+        task(extract_nesting_fields)
+        .validate()
         .set_task_instance_id("map_nesting_data")
         .handle_errors()
         .with_tracing()
@@ -357,14 +371,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(
-            df=map_nesting_events_raw, **(params_dict.get("map_nesting_data") or {})
-        )
+        .partial(df=map_nesting_events_raw, **(params.get("map_nesting_data") or {}))
         .call()
     )
 
     suspected_nest_data = (
-        extract_nesting_fields.validate()
+        task(extract_nesting_fields)
+        .validate()
         .set_task_instance_id("suspected_nest_data")
         .handle_errors()
         .with_tracing()
@@ -375,14 +388,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(
-            df=suspected_nest_events, **(params_dict.get("suspected_nest_data") or {})
-        )
+        .partial(df=suspected_nest_events, **(params.get("suspected_nest_data") or {}))
         .call()
     )
 
     hatching_data = (
-        extract_hatching_fields.validate()
+        task(extract_hatching_fields)
+        .validate()
         .set_task_instance_id("hatching_data")
         .handle_errors()
         .with_tracing()
@@ -393,12 +405,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=hatching_events, **(params_dict.get("hatching_data") or {}))
+        .partial(df=hatching_events, **(params.get("hatching_data") or {}))
         .call()
     )
 
     turtle_data = (
-        extract_turtle_fields.validate()
+        task(extract_turtle_fields)
+        .validate()
         .set_task_instance_id("turtle_data")
         .handle_errors()
         .with_tracing()
@@ -409,12 +422,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=turtle_events, **(params_dict.get("turtle_data") or {}))
+        .partial(df=turtle_events, **(params.get("turtle_data") or {}))
         .call()
     )
 
     total_nesting_count = (
-        dataframe_count.validate()
+        task(dataframe_count)
+        .validate()
         .set_task_instance_id("total_nesting_count")
         .handle_errors()
         .with_tracing()
@@ -425,14 +439,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(
-            df=nesting_events_raw, **(params_dict.get("total_nesting_count") or {})
-        )
+        .partial(df=nesting_events_raw, **(params.get("total_nesting_count") or {}))
         .call()
     )
 
     total_nesting_widget = (
-        create_single_value_widget_single_view.validate()
+        task(create_single_value_widget_single_view)
+        .validate()
         .set_task_instance_id("total_nesting_widget")
         .handle_errors()
         .with_tracing()
@@ -446,13 +459,14 @@ def main(params: Params):
             title="Total Nesting Events",
             decimal_places=0,
             data=total_nesting_count,
-            **(params_dict.get("total_nesting_widget") or {}),
+            **(params.get("total_nesting_widget") or {}),
         )
         .call()
     )
 
     total_hatched_eggs = (
-        dataframe_column_sum.validate()
+        task(dataframe_column_sum)
+        .validate()
         .set_task_instance_id("total_hatched_eggs")
         .handle_errors()
         .with_tracing()
@@ -466,13 +480,14 @@ def main(params: Params):
         .partial(
             df=hatching_data,
             column_name="hatchedempty_egg_shells",
-            **(params_dict.get("total_hatched_eggs") or {}),
+            **(params.get("total_hatched_eggs") or {}),
         )
         .call()
     )
 
     total_hatched_eggs_widget = (
-        create_single_value_widget_single_view.validate()
+        task(create_single_value_widget_single_view)
+        .validate()
         .set_task_instance_id("total_hatched_eggs_widget")
         .handle_errors()
         .with_tracing()
@@ -486,13 +501,14 @@ def main(params: Params):
             title="Total Hatched Eggs",
             decimal_places=0,
             data=total_hatched_eggs,
-            **(params_dict.get("total_hatched_eggs_widget") or {}),
+            **(params.get("total_hatched_eggs_widget") or {}),
         )
         .call()
     )
 
     hatching_success_pct = (
-        compute_hatching_success_pct.validate()
+        task(compute_hatching_success_pct)
+        .validate()
         .set_task_instance_id("hatching_success_pct")
         .handle_errors()
         .with_tracing()
@@ -503,12 +519,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=hatching_data, **(params_dict.get("hatching_success_pct") or {}))
+        .partial(df=hatching_data, **(params.get("hatching_success_pct") or {}))
         .call()
     )
 
     hatching_success_widget = (
-        create_single_value_widget_single_view.validate()
+        task(create_single_value_widget_single_view)
+        .validate()
         .set_task_instance_id("hatching_success_widget")
         .handle_errors()
         .with_tracing()
@@ -522,13 +539,14 @@ def main(params: Params):
             title="Hatching Success (%)",
             decimal_places=1,
             data=hatching_success_pct,
-            **(params_dict.get("hatching_success_widget") or {}),
+            **(params.get("hatching_success_widget") or {}),
         )
         .call()
     )
 
     total_turtle_count = (
-        dataframe_count.validate()
+        task(dataframe_count)
+        .validate()
         .set_task_instance_id("total_turtle_count")
         .handle_errors()
         .with_tracing()
@@ -539,12 +557,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=turtle_events, **(params_dict.get("total_turtle_count") or {}))
+        .partial(df=turtle_events, **(params.get("total_turtle_count") or {}))
         .call()
     )
 
     total_turtle_widget = (
-        create_single_value_widget_single_view.validate()
+        task(create_single_value_widget_single_view)
+        .validate()
         .set_task_instance_id("total_turtle_widget")
         .handle_errors()
         .with_tracing()
@@ -558,13 +577,14 @@ def main(params: Params):
             title="Total Turtle-Related Events",
             decimal_places=0,
             data=total_turtle_count,
-            **(params_dict.get("total_turtle_widget") or {}),
+            **(params.get("total_turtle_widget") or {}),
         )
         .call()
     )
 
     fp_events = (
-        filter_df.validate()
+        task(filter_df)
+        .validate()
         .set_task_instance_id("fp_events")
         .handle_errors()
         .with_tracing()
@@ -581,13 +601,14 @@ def main(params: Params):
             op="equal",
             value="yes",
             reset_index=True,
-            **(params_dict.get("fp_events") or {}),
+            **(params.get("fp_events") or {}),
         )
         .call()
     )
 
     total_fp_count = (
-        dataframe_count.validate()
+        task(dataframe_count)
+        .validate()
         .set_task_instance_id("total_fp_count")
         .handle_errors()
         .with_tracing()
@@ -598,12 +619,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=fp_events, **(params_dict.get("total_fp_count") or {}))
+        .partial(df=fp_events, **(params.get("total_fp_count") or {}))
         .call()
     )
 
     total_fp_widget = (
-        create_single_value_widget_single_view.validate()
+        task(create_single_value_widget_single_view)
+        .validate()
         .set_task_instance_id("total_fp_widget")
         .handle_errors()
         .with_tracing()
@@ -617,13 +639,14 @@ def main(params: Params):
             title="Total Turtles with FP",
             decimal_places=0,
             data=total_fp_count,
-            **(params_dict.get("total_fp_widget") or {}),
+            **(params.get("total_fp_widget") or {}),
         )
         .call()
     )
 
     nesting_colormap = (
-        apply_qualitative_color_map.validate()
+        task(apply_qualitative_color_map)
+        .validate()
         .set_task_instance_id("nesting_colormap")
         .handle_errors()
         .with_tracing()
@@ -639,13 +662,14 @@ def main(params: Params):
             input_column_name="event_type_display",
             colormap="Set1",
             custom_colors=None,
-            **(params_dict.get("nesting_colormap") or {}),
+            **(params.get("nesting_colormap") or {}),
         )
         .call()
     )
 
     nesting_layer = (
-        create_scatterplot_layer.validate()
+        task(create_scatterplot_layer_1)
+        .validate()
         .set_task_instance_id("nesting_layer")
         .handle_errors()
         .with_tracing()
@@ -669,13 +693,14 @@ def main(params: Params):
                 "color_column": "column_color",
             },
             data_url=None,
-            **(params_dict.get("nesting_layer") or {}),
+            **(params.get("nesting_layer") or {}),
         )
         .call()
     )
 
     nesting_map = (
-        draw_map.validate()
+        task(draw_map_1)
+        .validate()
         .set_task_instance_id("nesting_map")
         .handle_errors()
         .with_tracing()
@@ -694,13 +719,14 @@ def main(params: Params):
             max_zoom=15,
             view_state=None,
             legend_style={"placement": "bottom-right"},
-            **(params_dict.get("nesting_map") or {}),
+            **(params.get("nesting_map") or {}),
         )
         .call()
     )
 
     persist_nesting_map = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_nesting_map")
         .handle_errors()
         .with_tracing()
@@ -715,13 +741,14 @@ def main(params: Params):
             text=nesting_map,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="nesting_map",
-            **(params_dict.get("persist_nesting_map") or {}),
+            **(params.get("persist_nesting_map") or {}),
         )
         .call()
     )
 
     nesting_map_widget = (
-        create_map_widget_single_view.validate()
+        task(create_map_widget_single_view)
+        .validate()
         .set_task_instance_id("nesting_map_widget")
         .handle_errors()
         .with_tracing()
@@ -734,13 +761,14 @@ def main(params: Params):
         .partial(
             title="Nesting Activity Map",
             data=persist_nesting_map,
-            **(params_dict.get("nesting_map_widget") or {}),
+            **(params.get("nesting_map_widget") or {}),
         )
         .call()
     )
 
     nesting_over_time_chart = (
-        draw_time_series_bar_chart.validate()
+        task(draw_time_series_bar_chart)
+        .validate()
         .set_task_instance_id("nesting_over_time_chart")
         .handle_errors()
         .with_tracing()
@@ -766,13 +794,14 @@ def main(params: Params):
             },
             plot_style=None,
             widget_id="nesting_over_time_widget",
-            **(params_dict.get("nesting_over_time_chart") or {}),
+            **(params.get("nesting_over_time_chart") or {}),
         )
         .call()
     )
 
     persist_nesting_over_time = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_nesting_over_time")
         .handle_errors()
         .with_tracing()
@@ -787,13 +816,14 @@ def main(params: Params):
             text=nesting_over_time_chart,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="nesting_over_time",
-            **(params_dict.get("persist_nesting_over_time") or {}),
+            **(params.get("persist_nesting_over_time") or {}),
         )
         .call()
     )
 
     nesting_over_time_widget = (
-        create_plot_widget_single_view.validate()
+        task(create_plot_widget_single_view)
+        .validate()
         .set_task_instance_id("nesting_over_time_widget")
         .handle_errors()
         .with_tracing()
@@ -806,13 +836,14 @@ def main(params: Params):
         .partial(
             title="Nesting Activity Over Time",
             data=persist_nesting_over_time,
-            **(params_dict.get("nesting_over_time_widget") or {}),
+            **(params.get("nesting_over_time_widget") or {}),
         )
         .call()
     )
 
     nesting_by_beach_df = (
-        create_nesting_by_beach_table.validate()
+        task(create_nesting_by_beach_table)
+        .validate()
         .set_task_instance_id("nesting_by_beach_df")
         .handle_errors()
         .with_tracing()
@@ -823,12 +854,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=nesting_data, **(params_dict.get("nesting_by_beach_df") or {}))
+        .partial(df=nesting_data, **(params.get("nesting_by_beach_df") or {}))
         .call()
     )
 
     nesting_by_beach_drawn = (
-        draw_table.validate()
+        task(draw_table)
+        .validate()
         .set_task_instance_id("nesting_by_beach_drawn")
         .handle_errors()
         .with_tracing()
@@ -844,13 +876,14 @@ def main(params: Params):
             columns=None,
             table_config=None,
             widget_id="nesting_by_beach_widget",
-            **(params_dict.get("nesting_by_beach_drawn") or {}),
+            **(params.get("nesting_by_beach_drawn") or {}),
         )
         .call()
     )
 
     persist_nesting_by_beach = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_nesting_by_beach")
         .handle_errors()
         .with_tracing()
@@ -865,13 +898,14 @@ def main(params: Params):
             text=nesting_by_beach_drawn,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="nesting_by_beach",
-            **(params_dict.get("persist_nesting_by_beach") or {}),
+            **(params.get("persist_nesting_by_beach") or {}),
         )
         .call()
     )
 
     nesting_by_beach_widget = (
-        create_plot_widget_single_view.validate()
+        task(create_plot_widget_single_view)
+        .validate()
         .set_task_instance_id("nesting_by_beach_widget")
         .handle_errors()
         .with_tracing()
@@ -884,13 +918,14 @@ def main(params: Params):
         .partial(
             title="Total Nesting Activity by Beach",
             data=persist_nesting_by_beach,
-            **(params_dict.get("nesting_by_beach_widget") or {}),
+            **(params.get("nesting_by_beach_widget") or {}),
         )
         .call()
     )
 
     nesting_success_species_beach_df = (
-        create_nesting_success_by_species_beach_table.validate()
+        task(create_nesting_success_by_species_beach_table)
+        .validate()
         .set_task_instance_id("nesting_success_species_beach_df")
         .handle_errors()
         .with_tracing()
@@ -902,14 +937,14 @@ def main(params: Params):
             unpack_depth=1,
         )
         .partial(
-            df=hatching_data,
-            **(params_dict.get("nesting_success_species_beach_df") or {}),
+            df=hatching_data, **(params.get("nesting_success_species_beach_df") or {})
         )
         .call()
     )
 
     nest_success_sp_beach_drawn = (
-        draw_table.validate()
+        task(draw_table)
+        .validate()
         .set_task_instance_id("nest_success_sp_beach_drawn")
         .handle_errors()
         .with_tracing()
@@ -925,13 +960,14 @@ def main(params: Params):
             columns=None,
             table_config=None,
             widget_id="nest_success_sp_beach_widget",
-            **(params_dict.get("nest_success_sp_beach_drawn") or {}),
+            **(params.get("nest_success_sp_beach_drawn") or {}),
         )
         .call()
     )
 
     persist_nest_success_sp_beach = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_nest_success_sp_beach")
         .handle_errors()
         .with_tracing()
@@ -946,13 +982,14 @@ def main(params: Params):
             text=nest_success_sp_beach_drawn,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="nesting_success_species_beach",
-            **(params_dict.get("persist_nest_success_sp_beach") or {}),
+            **(params.get("persist_nest_success_sp_beach") or {}),
         )
         .call()
     )
 
     nest_success_sp_beach_widget = (
-        create_plot_widget_single_view.validate()
+        task(create_plot_widget_single_view)
+        .validate()
         .set_task_instance_id("nest_success_sp_beach_widget")
         .handle_errors()
         .with_tracing()
@@ -965,13 +1002,14 @@ def main(params: Params):
         .partial(
             title="Nesting Success by Species & Beach",
             data=persist_nest_success_sp_beach,
-            **(params_dict.get("nest_success_sp_beach_widget") or {}),
+            **(params.get("nest_success_sp_beach_widget") or {}),
         )
         .call()
     )
 
     nesting_success_manipulation_df = (
-        create_nesting_success_by_manipulation_table.validate()
+        task(create_nesting_success_by_manipulation_table)
+        .validate()
         .set_task_instance_id("nesting_success_manipulation_df")
         .handle_errors()
         .with_tracing()
@@ -983,14 +1021,14 @@ def main(params: Params):
             unpack_depth=1,
         )
         .partial(
-            df=hatching_data,
-            **(params_dict.get("nesting_success_manipulation_df") or {}),
+            df=hatching_data, **(params.get("nesting_success_manipulation_df") or {})
         )
         .call()
     )
 
     nest_success_manip_drawn = (
-        draw_table.validate()
+        task(draw_table)
+        .validate()
         .set_task_instance_id("nest_success_manip_drawn")
         .handle_errors()
         .with_tracing()
@@ -1006,13 +1044,14 @@ def main(params: Params):
             columns=None,
             table_config=None,
             widget_id="nest_success_manip_widget",
-            **(params_dict.get("nest_success_manip_drawn") or {}),
+            **(params.get("nest_success_manip_drawn") or {}),
         )
         .call()
     )
 
     persist_nest_success_manip = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_nest_success_manip")
         .handle_errors()
         .with_tracing()
@@ -1027,13 +1066,14 @@ def main(params: Params):
             text=nest_success_manip_drawn,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="nesting_success_manipulation",
-            **(params_dict.get("persist_nest_success_manip") or {}),
+            **(params.get("persist_nest_success_manip") or {}),
         )
         .call()
     )
 
     nest_success_manip_widget = (
-        create_plot_widget_single_view.validate()
+        task(create_plot_widget_single_view)
+        .validate()
         .set_task_instance_id("nest_success_manip_widget")
         .handle_errors()
         .with_tracing()
@@ -1046,13 +1086,14 @@ def main(params: Params):
         .partial(
             title="Nesting Success by Nest Manipulation",
             data=persist_nest_success_manip,
-            **(params_dict.get("nest_success_manip_widget") or {}),
+            **(params.get("nest_success_manip_widget") or {}),
         )
         .call()
     )
 
     turtle_colormap = (
-        apply_qualitative_color_map.validate()
+        task(apply_qualitative_color_map)
+        .validate()
         .set_task_instance_id("turtle_colormap")
         .handle_errors()
         .with_tracing()
@@ -1068,13 +1109,14 @@ def main(params: Params):
             input_column_name="activity_type",
             colormap="Set2",
             custom_colors=None,
-            **(params_dict.get("turtle_colormap") or {}),
+            **(params.get("turtle_colormap") or {}),
         )
         .call()
     )
 
     turtle_layer = (
-        create_scatterplot_layer.validate()
+        task(create_scatterplot_layer_1)
+        .validate()
         .set_task_instance_id("turtle_layer")
         .handle_errors()
         .with_tracing()
@@ -1098,13 +1140,14 @@ def main(params: Params):
                 "color_column": "column_color",
             },
             data_url=None,
-            **(params_dict.get("turtle_layer") or {}),
+            **(params.get("turtle_layer") or {}),
         )
         .call()
     )
 
     turtle_map = (
-        draw_map.validate()
+        task(draw_map_1)
+        .validate()
         .set_task_instance_id("turtle_map")
         .handle_errors()
         .with_tracing()
@@ -1123,13 +1166,14 @@ def main(params: Params):
             max_zoom=15,
             view_state=None,
             legend_style={"placement": "bottom-right"},
-            **(params_dict.get("turtle_map") or {}),
+            **(params.get("turtle_map") or {}),
         )
         .call()
     )
 
     persist_turtle_map = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_turtle_map")
         .handle_errors()
         .with_tracing()
@@ -1144,13 +1188,14 @@ def main(params: Params):
             text=turtle_map,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="turtle_map",
-            **(params_dict.get("persist_turtle_map") or {}),
+            **(params.get("persist_turtle_map") or {}),
         )
         .call()
     )
 
     turtle_map_widget = (
-        create_map_widget_single_view.validate()
+        task(create_map_widget_single_view)
+        .validate()
         .set_task_instance_id("turtle_map_widget")
         .handle_errors()
         .with_tracing()
@@ -1163,13 +1208,14 @@ def main(params: Params):
         .partial(
             title="Turtle-Related Events Map",
             data=persist_turtle_map,
-            **(params_dict.get("turtle_map_widget") or {}),
+            **(params.get("turtle_map_widget") or {}),
         )
         .call()
     )
 
     turtle_events_by_location_df = (
-        create_turtle_events_by_location_table.validate()
+        task(create_turtle_events_by_location_table)
+        .validate()
         .set_task_instance_id("turtle_events_by_location_df")
         .handle_errors()
         .with_tracing()
@@ -1180,14 +1226,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(
-            df=turtle_data, **(params_dict.get("turtle_events_by_location_df") or {})
-        )
+        .partial(df=turtle_data, **(params.get("turtle_events_by_location_df") or {}))
         .call()
     )
 
     turtle_events_by_location_drawn = (
-        draw_table.validate()
+        task(draw_table)
+        .validate()
         .set_task_instance_id("turtle_events_by_location_drawn")
         .handle_errors()
         .with_tracing()
@@ -1203,13 +1248,14 @@ def main(params: Params):
             columns=None,
             table_config=None,
             widget_id="turtle_events_by_location_widget",
-            **(params_dict.get("turtle_events_by_location_drawn") or {}),
+            **(params.get("turtle_events_by_location_drawn") or {}),
         )
         .call()
     )
 
     persist_turtle_events_by_loc = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_turtle_events_by_loc")
         .handle_errors()
         .with_tracing()
@@ -1224,13 +1270,14 @@ def main(params: Params):
             text=turtle_events_by_location_drawn,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="turtle_events_by_location",
-            **(params_dict.get("persist_turtle_events_by_loc") or {}),
+            **(params.get("persist_turtle_events_by_loc") or {}),
         )
         .call()
     )
 
     turtle_events_by_location_widget = (
-        create_plot_widget_single_view.validate()
+        task(create_plot_widget_single_view)
+        .validate()
         .set_task_instance_id("turtle_events_by_location_widget")
         .handle_errors()
         .with_tracing()
@@ -1243,13 +1290,14 @@ def main(params: Params):
         .partial(
             title="Turtle Events by Location & Activity",
             data=persist_turtle_events_by_loc,
-            **(params_dict.get("turtle_events_by_location_widget") or {}),
+            **(params.get("turtle_events_by_location_widget") or {}),
         )
         .call()
     )
 
     fp_by_location_df = (
-        create_fp_by_location_table.validate()
+        task(create_fp_by_location_table)
+        .validate()
         .set_task_instance_id("fp_by_location_df")
         .handle_errors()
         .with_tracing()
@@ -1260,12 +1308,13 @@ def main(params: Params):
             ],
             unpack_depth=1,
         )
-        .partial(df=turtle_data, **(params_dict.get("fp_by_location_df") or {}))
+        .partial(df=turtle_data, **(params.get("fp_by_location_df") or {}))
         .call()
     )
 
     fp_by_location_drawn = (
-        draw_table.validate()
+        task(draw_table)
+        .validate()
         .set_task_instance_id("fp_by_location_drawn")
         .handle_errors()
         .with_tracing()
@@ -1281,13 +1330,14 @@ def main(params: Params):
             columns=None,
             table_config=None,
             widget_id="fp_by_location_widget",
-            **(params_dict.get("fp_by_location_drawn") or {}),
+            **(params.get("fp_by_location_drawn") or {}),
         )
         .call()
     )
 
     persist_fp_by_location = (
-        persist_text.validate()
+        task(persist_text)
+        .validate()
         .set_task_instance_id("persist_fp_by_location")
         .handle_errors()
         .with_tracing()
@@ -1302,13 +1352,14 @@ def main(params: Params):
             text=fp_by_location_drawn,
             root_path=os.environ["ECOSCOPE_WORKFLOWS_RESULTS"],
             filename_suffix="fp_by_location",
-            **(params_dict.get("persist_fp_by_location") or {}),
+            **(params.get("persist_fp_by_location") or {}),
         )
         .call()
     )
 
     fp_by_location_widget = (
-        create_plot_widget_single_view.validate()
+        task(create_plot_widget_single_view)
+        .validate()
         .set_task_instance_id("fp_by_location_widget")
         .handle_errors()
         .with_tracing()
@@ -1321,13 +1372,14 @@ def main(params: Params):
         .partial(
             title="FP Monitoring by Location",
             data=persist_fp_by_location,
-            **(params_dict.get("fp_by_location_widget") or {}),
+            **(params.get("fp_by_location_widget") or {}),
         )
         .call()
     )
 
     dashboard = (
-        gather_curacao_dashboard.validate()
+        task(gather_curacao_dashboard)
+        .validate()
         .set_task_instance_id("dashboard")
         .handle_errors()
         .with_tracing()
@@ -1356,7 +1408,7 @@ def main(params: Params):
                 fp_by_location_widget,
             ],
             time_range=time_range,
-            **(params_dict.get("dashboard") or {}),
+            **(params.get("dashboard") or {}),
         )
         .call()
     )
