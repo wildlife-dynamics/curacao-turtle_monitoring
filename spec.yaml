@@ -1,16 +1,20 @@
-id:
+id: turtle_monitoring
 
 requirements:
-  - name: ecoscope-workflows-core
-    version: "0.22.18.*"
-    channel: https://repo.prefix.dev/ecoscope-workflows/
-
-  - name: ecoscope-workflows-ext-ecoscope
-    version: "0.22.18.*"
+  - name: ecoscope-platform
+    version: ">=2.15.0,<2.16.2"
     channel: https://repo.prefix.dev/ecoscope-workflows/
 
   - name: ecoscope-workflows-ext-custom
-    version: "0.0.46"
+    version: "0.1.0rc15"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
+
+  - name: pydeck
+    version: 0.9.2
+    channel: conda-forge
+
+  - name: ecoscope-workflows-ext-curacao
+    version: "0.0.0.*"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 task-instance-defaults:
@@ -38,8 +42,566 @@ workflow:
     id: base_maps
     task: set_base_maps_pydeck
 
-  - name: Groupers
-    id: groupers
-    task: set_groupers
+  # ── Fetch & Process All Events ────────────────────────────────────────────
+
+  - name: Fetch All Events
+    id: all_events
+    task: get_events
     partial:
-      groupers: []
+      client: ${{ workflow.er_client.return }}
+      time_range: ${{ workflow.time_range.return }}
+      event_columns:
+        - id
+        - time
+        - event_type
+        - geometry
+        - event_details
+      event_types:
+        - suspected_nest_v2
+        - attempt_v2
+        - dry_run_v2
+        - hatching_data
+        - relocation_data_v2
+        - turtle_data_form_v2
+      include_details: true
+      include_display_values: true
+      raise_on_empty: false
+      include_updates: false
+      include_related_events: false
+      include_null_geometry: false
+      force_point_geometry: true
+
+  - name: Process Event Details
+    id: all_events_processed
+    task: process_events_details
+    partial:
+      df: ${{ workflow.all_events.return }}
+      client: ${{ workflow.er_client.return }}
+      map_to_titles: false
+      ordered: false
+
+  # ── Filter Event Types ────────────────────────────────────────────────────
+
+  - name: Filter Nesting Events
+    id: nesting_events_raw
+    task: filter_row_values
+    partial:
+      df: ${{ workflow.all_events_processed.return }}
+      column: event_type
+      values:
+        - suspected_nest_v2
+        - attempt_v2
+        - dry_run_v2
+
+  - name: Filter Map Nesting Events
+    id: map_nesting_events_raw
+    task: filter_row_values
+    partial:
+      df: ${{ workflow.all_events_processed.return }}
+      column: event_type
+      values:
+        - suspected_nest_v2
+        - attempt_v2
+        - relocation_data_v2
+
+  - name: Filter Suspected Nest Events
+    id: suspected_nest_events
+    task: filter_row_values
+    partial:
+      df: ${{ workflow.all_events_processed.return }}
+      column: event_type
+      values:
+        - suspected_nest_v2
+
+  - name: Filter Hatching Events
+    id: hatching_events
+    task: filter_row_values
+    partial:
+      df: ${{ workflow.all_events_processed.return }}
+      column: event_type
+      values:
+        - hatching_data
+
+  - name: Filter Turtle Events
+    id: turtle_events
+    task: filter_row_values
+    partial:
+      df: ${{ workflow.all_events_processed.return }}
+      column: event_type
+      values:
+        - turtle_data_form_v2
+
+  # ── Extract Fields ────────────────────────────────────────────────────────
+
+  - name: Extract Nesting Fields
+    id: nesting_data
+    task: extract_nesting_fields
+    partial:
+      df: ${{ workflow.nesting_events_raw.return }}
+
+  - name: Extract Map Nesting Fields
+    id: map_nesting_data
+    task: extract_nesting_fields
+    partial:
+      df: ${{ workflow.map_nesting_events_raw.return }}
+
+  - name: Extract Suspected Nest Fields
+    id: suspected_nest_data
+    task: extract_nesting_fields
+    partial:
+      df: ${{ workflow.suspected_nest_events.return }}
+
+  - name: Extract Hatching Fields
+    id: hatching_data
+    task: extract_hatching_fields
+    partial:
+      df: ${{ workflow.hatching_events.return }}
+
+  - name: Extract Turtle Fields
+    id: turtle_data
+    task: extract_turtle_fields
+    partial:
+      df: ${{ workflow.turtle_events.return }}
+
+  # ── Headline Stats ────────────────────────────────────────────────────────
+
+  - title: Headline Stats
+    type: task-group
+    description: Key statistics for the turtle monitoring period.
+    tasks:
+      - name: Total Nesting Events Count
+        id: total_nesting_count
+        task: dataframe_count
+        partial:
+          df: ${{ workflow.nesting_events_raw.return }}
+
+      - name: Total Nesting Events Widget
+        id: total_nesting_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Total Nesting Events"
+          decimal_places: 0
+          data: ${{ workflow.total_nesting_count.return }}
+
+      - name: Total Hatched Eggs
+        id: total_hatched_eggs
+        task: dataframe_column_sum
+        partial:
+          df: ${{ workflow.hatching_data.return }}
+          column_name: hatchedempty_egg_shells
+
+      - name: Total Hatched Eggs Widget
+        id: total_hatched_eggs_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Total Hatched Eggs"
+          decimal_places: 0
+          data: ${{ workflow.total_hatched_eggs.return }}
+
+      - name: Hatching Success Percentage
+        id: hatching_success_pct
+        task: compute_hatching_success_pct
+        partial:
+          df: ${{ workflow.hatching_data.return }}
+
+      - name: Hatching Success Widget
+        id: hatching_success_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Hatching Success (%)"
+          decimal_places: 1
+          data: ${{ workflow.hatching_success_pct.return }}
+
+      - name: Total Turtle-Related Events Count
+        id: total_turtle_count
+        task: dataframe_count
+        partial:
+          df: ${{ workflow.turtle_events.return }}
+
+      - name: Total Turtle-Related Events Widget
+        id: total_turtle_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Total Turtle-Related Events"
+          decimal_places: 0
+          data: ${{ workflow.total_turtle_count.return }}
+
+      - name: Filter Turtles with FP
+        id: fp_events
+        task: filter_df
+        partial:
+          df: ${{ workflow.turtle_data.return }}
+          column_name: fibropapillomatosis
+          op: equal
+          value: "yes"
+          reset_index: true
+
+      - name: Total Turtles with FP Count
+        id: total_fp_count
+        task: dataframe_count
+        partial:
+          df: ${{ workflow.fp_events.return }}
+
+      - name: Total Turtles with FP Widget
+        id: total_fp_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Total Turtles with FP"
+          decimal_places: 0
+          data: ${{ workflow.total_fp_count.return }}
+
+  # ── Nesting ───────────────────────────────────────────────────────────────
+
+  - title: Nesting
+    type: task-group
+    description: Nesting activity maps, charts, and tables.
+    tasks:
+      - name: Color Map - Nesting Activity
+        id: nesting_colormap
+        task: apply_qualitative_color_map
+        partial:
+          df: ${{ workflow.map_nesting_data.return }}
+          input_column_name: event_type_display
+          colormap: Set1
+          custom_colors: null
+
+      - name: Nesting Points Layer
+        id: nesting_layer
+        task: ecoscope_workflows_ext_custom.tasks.results.create_scatterplot_layer
+        partial:
+          geodataframe: ${{ workflow.nesting_colormap.return }}
+          layer_style:
+            get_fill_color: column_color
+            get_radius: 5
+            radius_units: pixels
+          legend:
+            title: "Nesting Activity"
+            label_column: column_label
+            color_column: column_color
+          data_url: null
+
+      - name: Nesting Activity Map
+        id: nesting_map
+        task: ecoscope_workflows_ext_custom.tasks.results.draw_map
+        partial:
+          geo_layers: ${{ workflow.nesting_layer.return }}
+          tile_layers: ${{ workflow.base_maps.return }}
+          static: false
+          title: null
+          max_zoom: 15
+          view_state: null
+          legend_style:
+            placement: bottom-right
+
+      - id: persist_nesting_map
+        task: persist_text
+        partial:
+          text: ${{ workflow.nesting_map.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: nesting_map
+
+      - name: Nesting Activity Map Widget
+        id: nesting_map_widget
+        task: create_map_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Nesting Activity Map"
+          data: ${{ workflow.persist_nesting_map.return }}
+
+      - name: Nesting Activity Over Time Chart
+        id: nesting_over_time_chart
+        task: draw_time_series_bar_chart
+        partial:
+          dataframe: ${{ workflow.nesting_data.return }}
+          x_axis: time
+          y_axis: count
+          category: specie
+          agg_function: sum
+          time_interval: month
+          color_column: null
+          layout_style:
+            barmode: group
+            xaxis:
+              title: "Month"
+            yaxis:
+              title: "Nesting Events"
+          plot_style: null
+          widget_id: "nesting_over_time_widget"
+
+      - id: persist_nesting_over_time
+        task: persist_text
+        partial:
+          text: ${{ workflow.nesting_over_time_chart.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: nesting_over_time
+
+      - name: Nesting Activity Over Time Widget
+        id: nesting_over_time_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Nesting Activity Over Time"
+          data: ${{ workflow.persist_nesting_over_time.return }}
+
+      - name: Nesting by Beach Table
+        id: nesting_by_beach_df
+        task: create_nesting_by_beach_table
+        partial:
+          df: ${{ workflow.nesting_data.return }}
+
+      - id: nesting_by_beach_drawn
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.nesting_by_beach_df.return }}
+          columns: null
+          table_config: null
+          widget_id: "nesting_by_beach_widget"
+
+      - id: persist_nesting_by_beach
+        task: persist_text
+        partial:
+          text: ${{ workflow.nesting_by_beach_drawn.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: nesting_by_beach
+
+      - name: Nesting by Beach Widget
+        id: nesting_by_beach_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Total Nesting Activity by Beach"
+          data: ${{ workflow.persist_nesting_by_beach.return }}
+
+      - name: Nesting Success by Species & Beach Table
+        id: nesting_success_species_beach_df
+        task: create_nesting_success_by_species_beach_table
+        partial:
+          df: ${{ workflow.hatching_data.return }}
+
+      - id: nest_success_sp_beach_drawn
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.nesting_success_species_beach_df.return }}
+          columns: null
+          table_config: null
+          widget_id: "nest_success_sp_beach_widget"
+
+      - id: persist_nest_success_sp_beach
+        task: persist_text
+        partial:
+          text: ${{ workflow.nest_success_sp_beach_drawn.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: nesting_success_species_beach
+
+      - name: Nesting Success by Species & Beach Widget
+        id: nest_success_sp_beach_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Nesting Success by Species & Beach"
+          data: ${{ workflow.persist_nest_success_sp_beach.return }}
+
+      - name: Nesting Success by Manipulation Table
+        id: nesting_success_manipulation_df
+        task: create_nesting_success_by_manipulation_table
+        partial:
+          df: ${{ workflow.hatching_data.return }}
+
+      - id: nest_success_manip_drawn
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.nesting_success_manipulation_df.return }}
+          columns: null
+          table_config: null
+          widget_id: "nest_success_manip_widget"
+
+      - id: persist_nest_success_manip
+        task: persist_text
+        partial:
+          text: ${{ workflow.nest_success_manip_drawn.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: nesting_success_manipulation
+
+      - name: Nesting Success by Manipulation Widget
+        id: nest_success_manip_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Nesting Success by Nest Manipulation"
+          data: ${{ workflow.persist_nest_success_manip.return }}
+
+  # ── Turtle-Related Events ─────────────────────────────────────────────────
+
+  - title: Turtle-Related Events
+    type: task-group
+    description: Turtle field event locations and activity breakdown.
+    tasks:
+      - name: Color Map - Turtle Activity
+        id: turtle_colormap
+        task: apply_qualitative_color_map
+        partial:
+          df: ${{ workflow.turtle_data.return }}
+          input_column_name: activity_type
+          colormap: Set2
+          custom_colors: null
+
+      - name: Turtle Events Layer
+        id: turtle_layer
+        task: ecoscope_workflows_ext_custom.tasks.results.create_scatterplot_layer
+        partial:
+          geodataframe: ${{ workflow.turtle_colormap.return }}
+          layer_style:
+            get_fill_color: column_color
+            get_radius: 5
+            radius_units: pixels
+          legend:
+            title: "Turtle Events"
+            label_column: column_label
+            color_column: column_color
+          data_url: null
+
+      - name: Turtle Events Map
+        id: turtle_map
+        task: ecoscope_workflows_ext_custom.tasks.results.draw_map
+        partial:
+          geo_layers: ${{ workflow.turtle_layer.return }}
+          tile_layers: ${{ workflow.base_maps.return }}
+          static: false
+          title: null
+          max_zoom: 15
+          view_state: null
+          legend_style:
+            placement: bottom-right
+
+      - id: persist_turtle_map
+        task: persist_text
+        partial:
+          text: ${{ workflow.turtle_map.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: turtle_map
+
+      - name: Turtle Events Map Widget
+        id: turtle_map_widget
+        task: create_map_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Turtle-Related Events Map"
+          data: ${{ workflow.persist_turtle_map.return }}
+
+      - name: Turtle Events by Location Table
+        id: turtle_events_by_location_df
+        task: create_turtle_events_by_location_table
+        partial:
+          df: ${{ workflow.turtle_data.return }}
+
+      - id: turtle_events_by_location_drawn
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.turtle_events_by_location_df.return }}
+          columns: null
+          table_config: null
+          widget_id: "turtle_events_by_location_widget"
+
+      - id: persist_turtle_events_by_loc
+        task: persist_text
+        partial:
+          text: ${{ workflow.turtle_events_by_location_drawn.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: turtle_events_by_location
+
+      - name: Turtle Events by Location Widget
+        id: turtle_events_by_location_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Turtle Events by Location & Activity"
+          data: ${{ workflow.persist_turtle_events_by_loc.return }}
+
+  # ── Fibropapillomatosis (FP) Monitoring ───────────────────────────────────
+
+  - title: Fibropapillomatosis (FP) Monitoring
+    type: task-group
+    description: FP cases by location and activity type.
+    tasks:
+      - name: FP by Location Table
+        id: fp_by_location_df
+        task: create_fp_by_location_table
+        partial:
+          df: ${{ workflow.turtle_data.return }}
+
+      - id: fp_by_location_drawn
+        task: draw_table
+        partial:
+          dataframe: ${{ workflow.fp_by_location_df.return }}
+          columns: null
+          table_config: null
+          widget_id: "fp_by_location_widget"
+
+      - id: persist_fp_by_location
+        task: persist_text
+        partial:
+          text: ${{ workflow.fp_by_location_drawn.return }}
+          root_path: ${{ env.ECOSCOPE_WORKFLOWS_RESULTS }}
+          filename_suffix: fp_by_location
+
+      - name: FP by Location Widget
+        id: fp_by_location_widget
+        task: create_plot_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "FP Monitoring by Location"
+          data: ${{ workflow.persist_fp_by_location.return }}
+
+  # ── Dashboard ─────────────────────────────────────────────────────────────
+
+  - name: Create Dashboard
+    id: dashboard
+    task: gather_curacao_dashboard
+    partial:
+      details: ${{ workflow.workflow_details.return }}
+      widgets:
+        - ${{ workflow.total_nesting_widget.return }}
+        - ${{ workflow.total_hatched_eggs_widget.return }}
+        - ${{ workflow.hatching_success_widget.return }}
+        - ${{ workflow.total_turtle_widget.return }}
+        - ${{ workflow.total_fp_widget.return }}
+        - ${{ workflow.nesting_map_widget.return }}
+        - ${{ workflow.nesting_over_time_widget.return }}
+        - ${{ workflow.nesting_by_beach_widget.return }}
+        - ${{ workflow.nest_success_sp_beach_widget.return }}
+        - ${{ workflow.nest_success_manip_widget.return }}
+        - ${{ workflow.turtle_map_widget.return }}
+        - ${{ workflow.turtle_events_by_location_widget.return }}
+        - ${{ workflow.fp_by_location_widget.return }}
+      time_range: ${{ workflow.time_range.return }}
