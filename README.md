@@ -1,6 +1,6 @@
 # Curaçao Turtle Monitoring
 
-**[Full setup and configuration guide](https://wildlife-dynamics.github.io/Curacao-Turtle_Monitoring/)** — A step-by-step walkthrough on how to set up and run the workflow.
+**[Full setup and configuration guide](https://wildlife-dynamics.github.io/curacao-turtle_monitoring/)** — A step-by-step walkthrough on how to set up and run the workflow.
 
 This workflow monitors sea turtle nesting activity, hatching success, and turtle encounters around the island of Curaçao. It connects to EarthRanger to retrieve nesting surveys, hatching inspections, nest relocation records, and turtle encounter data. The workflow then produces a dashboard featuring maps, time series, and hatching success tables, broken down by species, beach, and nest manipulation type.
 
