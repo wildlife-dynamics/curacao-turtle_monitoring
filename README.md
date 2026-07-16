@@ -24,14 +24,14 @@ This workflow monitors sea turtle nesting activity, hatching success, and turtle
 
 ## Event types
 
-| Event type | Display name | Used for |
-|------------|--------------|----------|
-| `suspected_nest_v2` | (suspected) Nest | Suspected nesting crawls |
-| `attempt_v2` | Attempt | False crawls / nesting attempts |
-| `dry_run_v2` | Dry run | Dry runs (no eggs laid) |
-| `hatching_data` | Hatching Data | Hatching inspections with egg counts |
-| `relocation_data_v2` | Relocation Data | Relocated nest records |
-| `turtle_data_form_v2` | Turtle Data Form | Turtle encounter records (netting, rescue, stranding, handcatch, release) |
+| Event type | Used for |
+|------------|----------|
+| (suspected) Nest | Suspected nesting crawls |
+| Attempt | False crawls / nesting attempts |
+| Dry run | Dry runs (no eggs laid) |
+| Hatching Data | Hatching inspections with egg counts |
+| Relocation Data | Relocated nest records |
+| Turtle Data Form | Turtle encounter records (netting, rescue, stranding, handcatch, release) |
 
 ## Requirements
 
