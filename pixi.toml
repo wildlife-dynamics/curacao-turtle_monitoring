@@ -1,6 +1,7 @@
-[project]
+[workspace]
 name = "curacao-turtle-monitoring"
 channels = [
+  'file:///tmp/ecoscope-workflows-custom/release/artifacts/',
   'https://repo.prefix.dev/ecoscope-workflows/',
   'https://repo.prefix.dev/ecoscope-workflows-custom/',
   'conda-forge',
@@ -8,7 +9,7 @@ channels = [
 platforms = ['linux-64', 'osx-arm64', 'osx-64', 'win-64']
 
 [dependencies]
-wt-compiler = "==0.8.2"
+wt-compiler = "==0.8.3"
 graphviz = "*"
 
 [tasks.compile-turtle-monitoring]

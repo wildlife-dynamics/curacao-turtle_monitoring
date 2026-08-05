@@ -6,9 +6,10 @@ import hashlib
 import io
 import json
 import uuid
+from collections.abc import Coroutine, Generator, Iterator
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Coroutine, Generator, Iterator, Literal
+from typing import Any, Literal
 from unittest.mock import patch
 
 import numpy as np
@@ -43,7 +44,7 @@ MATCHSPEC_OVERRIDE = "ecoscope-workflows-turtle-monitoring-workflow"
 RESULTS_ENV_VAR = "ECOSCOPE_WORKFLOWS_RESULTS"
 IO_TASKS_IMPORTABLE_REFERENCES = [
     "ecoscope.platform.tasks.io.get_events",
-    "ecoscope_workflows_ext_custom.tasks.io.process_events_details",
+    "ecoscope.platform.tasks.io.process_events_details",
 ]
 
 yaml = ruamel.yaml.YAML(typ="safe")
