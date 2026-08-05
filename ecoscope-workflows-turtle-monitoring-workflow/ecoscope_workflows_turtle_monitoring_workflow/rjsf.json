@@ -68,6 +68,23 @@
       "description": "Choose the period of time to analyze.",
       "title": "Time Range"
     },
+    "report_template_path": {
+      "additionalProperties": false,
+      "properties": {
+        "var": {
+          "title": "Report Template Path",
+          "type": "string",
+          "description": "Path or URL to the .docx Jinja2 template used for the turtle monitoring report.",
+          "default": "/Users/zak/Documents/w-dynamics/Curacao-Turtle_Monitoring/resources/templates/curacao_turtle_monitoring_template.docx",
+          "ecoscope:advanced": true
+        }
+      },
+      "required": [
+        "var"
+      ],
+      "type": "object",
+      "title": "Report Template Path"
+    },
     "base_maps": {
       "additionalProperties": false,
       "properties": {
@@ -76,12 +93,14 @@
             {
               "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
               "opacity": 1,
-              "max_zoom": 20
+              "max_zoom": 20,
+              "min_zoom": 0
             },
             {
               "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
               "opacity": 0.5,
-              "max_zoom": 20
+              "max_zoom": 20,
+              "min_zoom": 0
             }
           ],
           "items": {
@@ -102,6 +121,7 @@
                   "opacity": {
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
+                    "ecoscope:advanced": true,
                     "maximum": 1.0,
                     "minimum": 0.0,
                     "title": "Layer Opacity",
@@ -126,6 +146,7 @@
                   "opacity": {
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
+                    "ecoscope:advanced": true,
                     "maximum": 1.0,
                     "minimum": 0.0,
                     "title": "Layer Opacity",
@@ -150,6 +171,7 @@
                   "opacity": {
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
+                    "ecoscope:advanced": true,
                     "maximum": 1.0,
                     "minimum": 0.0,
                     "title": "Layer Opacity",
@@ -174,6 +196,7 @@
                   "opacity": {
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
+                    "ecoscope:advanced": true,
                     "maximum": 1.0,
                     "minimum": 0.0,
                     "title": "Layer Opacity",
@@ -181,30 +204,6 @@
                   }
                 },
                 "title": "Terrain",
-                "type": "object"
-              },
-              {
-                "description": "A tiled raster layer loaded on-demand from a URL template (e.g., base maps).",
-                "properties": {
-                  "url": {
-                    "default": "https://tiles.arcgis.com/tiles/POUcpLYXNckpLjnY/arcgis/rest/services/landDx_basemap_tiles_mapservice/MapServer/tile/{z}/{y}/{x}",
-                    "title": "Preset Layer URL",
-                    "type": "string",
-                    "const": "https://tiles.arcgis.com/tiles/POUcpLYXNckpLjnY/arcgis/rest/services/landDx_basemap_tiles_mapservice/MapServer/tile/{z}/{y}/{x}",
-                    "enum": [
-                      "https://tiles.arcgis.com/tiles/POUcpLYXNckpLjnY/arcgis/rest/services/landDx_basemap_tiles_mapservice/MapServer/tile/{z}/{y}/{x}"
-                    ]
-                  },
-                  "opacity": {
-                    "default": 1,
-                    "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
-                    "maximum": 1.0,
-                    "minimum": 0.0,
-                    "title": "Layer Opacity",
-                    "type": "number"
-                  }
-                },
-                "title": "LandDx",
                 "type": "object"
               },
               {
@@ -222,6 +221,7 @@
                   "opacity": {
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
+                    "ecoscope:advanced": true,
                     "maximum": 1.0,
                     "minimum": 0.0,
                     "title": "Layer Opacity",
@@ -244,6 +244,7 @@
                   "opacity": {
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
+                    "ecoscope:advanced": true,
                     "maximum": 1.0,
                     "minimum": 0.0,
                     "title": "Custom Layer Opacity",
@@ -276,6 +277,331 @@
       "type": "object",
       "required": [],
       "title": "Base Maps"
+    },
+    "chart_palette": {
+      "additionalProperties": false,
+      "properties": {
+        "colormap": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/QualitativeColormap"
+            }
+          ],
+          "default": "Set1",
+          "title": "Colormap",
+          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+        },
+        "custom_colors": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Custom Colors",
+          "type": "array",
+          "description": "Leave empty to use the palette above. When provided, these colors are applied instead.",
+          "ecoscope:advanced": true
+        }
+      },
+      "type": "object",
+      "required": [],
+      "title": "Chart Colors"
+    },
+    "Nesting": {
+      "type": "object",
+      "description": "",
+      "ecoscope:task_group": true,
+      "properties": {
+        "nesting_colormap": {
+          "additionalProperties": false,
+          "properties": {
+            "colormap": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/QualitativeColormap"
+                }
+              ],
+              "default": "Set1",
+              "title": "Colormap",
+              "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+            },
+            "custom_colors": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Custom Colors",
+              "type": "array",
+              "description": "Leave empty to use the palette above. When provided, these colors are applied instead."
+            }
+          },
+          "required": [],
+          "type": "object",
+          "title": ""
+        },
+        "nesting_layer": {
+          "additionalProperties": false,
+          "properties": {
+            "use_icons": {
+              "default": false,
+              "title": "Use Icons",
+              "type": "boolean",
+              "description": "Use EarthRanger SVG icons instead of scatter points.",
+              "ecoscope:advanced": true
+            },
+            "scatter_radius": {
+              "default": 5,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Scatter Radius",
+              "type": "integer",
+              "description": "Point radius in pixels. Only applies when icons are disabled.",
+              "ecoscope:advanced": true
+            },
+            "scatter_opacity": {
+              "default": 1.0,
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "title": "Scatter Opacity",
+              "type": "number",
+              "description": "Point opacity (0\u20131). Only applies when icons are disabled.",
+              "ecoscope:advanced": true
+            },
+            "icon_size": {
+              "default": 32,
+              "maximum": 128,
+              "minimum": 8,
+              "title": "Icon Size",
+              "type": "integer",
+              "description": "Icon size in pixels. Only applies when icons are enabled.",
+              "ecoscope:advanced": true
+            },
+            "tooltip_columns": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Tooltip Columns",
+              "type": "array",
+              "description": "Columns to show when hovering over a point. Leave empty to show all properties.",
+              "ecoscope:advanced": true
+            }
+          },
+          "required": [],
+          "type": "object",
+          "title": ""
+        }
+      }
+    },
+    "nesting_over_time_chart": {
+      "additionalProperties": false,
+      "properties": {
+        "time_interval": {
+          "default": "month",
+          "title": "Time Interval",
+          "type": "string",
+          "description": "Group and bucket nesting events by this time period on the chart.",
+          "oneOf": [
+            {
+              "const": "year",
+              "title": "Year"
+            },
+            {
+              "const": "month",
+              "title": "Month"
+            },
+            {
+              "const": "week",
+              "title": "Week"
+            },
+            {
+              "const": "day",
+              "title": "Day"
+            },
+            {
+              "const": "hour",
+              "title": "Hour"
+            }
+          ]
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Nesting Activity Over Time"
+    },
+    "Turtle-Related Events": {
+      "type": "object",
+      "description": "",
+      "ecoscope:task_group": true,
+      "properties": {
+        "turtle_colormap": {
+          "additionalProperties": false,
+          "properties": {
+            "colormap": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/QualitativeColormap"
+                }
+              ],
+              "default": "Set1",
+              "title": "Colormap",
+              "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+            },
+            "custom_colors": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Custom Colors",
+              "type": "array",
+              "description": "Leave empty to use the palette above. When provided, these colors are applied instead."
+            }
+          },
+          "required": [],
+          "type": "object",
+          "title": ""
+        },
+        "turtle_layer": {
+          "additionalProperties": false,
+          "properties": {
+            "opacity": {
+              "default": 1.0,
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "title": "Opacity",
+              "type": "number",
+              "description": "Opacity of the layer, between 0 (transparent) and 1 (opaque).",
+              "ecoscope:advanced": true
+            },
+            "get_radius": {
+              "default": 5,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Get Radius",
+              "type": "integer",
+              "description": "Radius of each point, in the units specified by radius_units.",
+              "ecoscope:advanced": true
+            },
+            "radius_units": {
+              "default": "pixels",
+              "title": "Radius Units",
+              "type": "string",
+              "description": "Units for get_radius. 'pixels' keeps a fixed screen size; 'meters' scales with zoom.",
+              "ecoscope:advanced": true
+            },
+            "radius_scale": {
+              "default": 1.0,
+              "minimum": 0.0,
+              "title": "Radius Scale",
+              "type": "number",
+              "description": "A global radius multiplier applied to all points.",
+              "ecoscope:advanced": true
+            },
+            "radius_min_pixels": {
+              "default": 0.0,
+              "minimum": 0.0,
+              "title": "Radius Min Pixels",
+              "type": "number",
+              "description": "Minimum point radius in pixels. Prevents points from becoming invisible at low zoom.",
+              "ecoscope:advanced": true
+            },
+            "radius_max_pixels": {
+              "default": 20,
+              "title": "Radius Max Pixels",
+              "type": "number",
+              "description": "Maximum point radius in pixels. Caps how large points grow when zoomed in.",
+              "ecoscope:advanced": true
+            },
+            "get_line_color": {
+              "default": "#000000",
+              "title": "Get Line Color",
+              "type": "string",
+              "description": "Outline color as a CSS hex string (e.g. '#000000' for black). Only visible when stroked is enabled.",
+              "ecoscope:advanced": true
+            },
+            "get_line_width": {
+              "default": 1.0,
+              "minimum": 0.0,
+              "title": "Get Line Width",
+              "type": "number",
+              "description": "Outline width in line_width_units. Takes effect when stroked=true.",
+              "ecoscope:advanced": true
+            },
+            "line_width_units": {
+              "default": "pixels",
+              "title": "Line Width Units",
+              "type": "string",
+              "description": "Units for get_line_width. 'pixels' keeps a fixed screen width; 'meters' scales with zoom.",
+              "ecoscope:advanced": true
+            },
+            "line_width_scale": {
+              "default": 1.0,
+              "minimum": 0.0,
+              "title": "Line Width Scale",
+              "type": "number",
+              "description": "A global line width multiplier applied to all outlines.",
+              "ecoscope:advanced": true
+            },
+            "line_width_min_pixels": {
+              "default": 0.0,
+              "minimum": 0.0,
+              "title": "Line Width Min Pixels",
+              "type": "number",
+              "description": "Minimum outline width in pixels.",
+              "ecoscope:advanced": true
+            },
+            "line_width_max_pixels": {
+              "default": 2,
+              "title": "Line Width Max Pixels",
+              "type": "number",
+              "description": "Maximum outline width in pixels. Caps how wide the stroke grows at high zoom.",
+              "ecoscope:advanced": true
+            },
+            "tooltip_columns": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Tooltip Columns",
+              "type": "array",
+              "description": "Columns to show when hovering over a point. Leave empty to show all properties.",
+              "ecoscope:advanced": true
+            },
+            "filled": {
+              "default": true,
+              "title": "Filled",
+              "type": "boolean",
+              "description": "Fill each object with the assigned color.",
+              "ecoscope:advanced": true
+            },
+            "stroked": {
+              "default": false,
+              "title": "Stroked",
+              "type": "boolean",
+              "description": "Draw an outline around each point. Configure color and width with get_line_color and get_line_width.",
+              "ecoscope:advanced": true
+            },
+            "billboard": {
+              "default": false,
+              "title": "Billboard",
+              "type": "boolean",
+              "description": "If true, points always face the camera regardless of map tilt.",
+              "ecoscope:advanced": true
+            },
+            "auto_highlight": {
+              "default": false,
+              "title": "Auto Highlight",
+              "type": "boolean",
+              "description": "Highlight the point under the cursor when hovering.",
+              "ecoscope:advanced": true
+            },
+            "pickable": {
+              "default": true,
+              "title": "Pickable",
+              "type": "boolean",
+              "description": "Allow points to respond to pointer and touch events.",
+              "ecoscope:advanced": true
+            }
+          },
+          "required": [],
+          "type": "object",
+          "title": ""
+        }
+      }
     }
   },
   "$defs": {
@@ -319,6 +645,24 @@
       ],
       "title": "TimezoneInfo",
       "type": "object"
+    },
+    "QualitativeColormap": {
+      "enum": [
+        "Pastel1",
+        "Pastel2",
+        "Paired",
+        "Accent",
+        "Dark2",
+        "Set1",
+        "Set2",
+        "Set3",
+        "tab10",
+        "tab20",
+        "tab20b",
+        "tab20c"
+      ],
+      "title": "QualitativeColormap",
+      "type": "string"
     }
   },
   "uiSchema": {
@@ -335,11 +679,77 @@
         "timezone"
       ]
     },
+    "chart_palette": {
+      "ui:order": [
+        "colormap",
+        "custom_colors"
+      ]
+    },
+    "Nesting": {
+      "ui:order": [
+        "nesting_colormap",
+        "nesting_layer"
+      ],
+      "nesting_colormap": {
+        "ui:order": [
+          "colormap",
+          "custom_colors"
+        ]
+      },
+      "nesting_layer": {
+        "ui:order": [
+          "use_icons",
+          "scatter_radius",
+          "scatter_opacity",
+          "icon_size",
+          "tooltip_columns"
+        ]
+      }
+    },
+    "Turtle-Related Events": {
+      "ui:order": [
+        "turtle_colormap",
+        "turtle_layer"
+      ],
+      "turtle_colormap": {
+        "ui:order": [
+          "colormap",
+          "custom_colors"
+        ]
+      },
+      "turtle_layer": {
+        "ui:order": [
+          "opacity",
+          "get_radius",
+          "radius_units",
+          "radius_scale",
+          "radius_min_pixels",
+          "radius_max_pixels",
+          "get_line_color",
+          "get_line_width",
+          "line_width_units",
+          "line_width_scale",
+          "line_width_min_pixels",
+          "line_width_max_pixels",
+          "tooltip_columns",
+          "filled",
+          "stroked",
+          "billboard",
+          "auto_highlight",
+          "pickable"
+        ]
+      }
+    },
     "ui:order": [
       "workflow_details",
       "er_client",
       "time_range",
-      "base_maps"
+      "report_template_path",
+      "base_maps",
+      "chart_palette",
+      "Nesting",
+      "nesting_over_time_chart",
+      "Turtle-Related Events"
     ]
   },
   "additionalProperties": false
