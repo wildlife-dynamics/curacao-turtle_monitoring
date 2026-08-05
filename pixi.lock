@@ -198,7 +198,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-64/epoxy-1.5.10-h8616949_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/fontconfig-2.18.1-h7a4440b_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/freetype-2.14.3-h694c41f_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/osx-64/fribidi-1.0.16-h8616949_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-64/fribidi-1.0.16-ha1e9b39_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/gdk-pixbuf-2.44.7-hae309b2_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/glib-tools-2.88.3-h943dd1b_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-64/graphite2-1.3.15-hcc62823_0.conda
@@ -2402,17 +2402,17 @@ packages:
     - libfreetype6 >=2.14.3
   size: 174300
   timestamp: 1780934162319
-- conda: https://conda.anaconda.org/conda-forge/osx-64/fribidi-1.0.16-h8616949_0.conda
-  sha256: 53dd0a6c561cf31038633aaa0d52be05da1f24e86947f06c4e324606c72c7413
-  md5: 4422491d30462506b9f2d554ab55e33d
+- conda: https://conda.anaconda.org/conda-forge/osx-64/fribidi-1.0.16-ha1e9b39_1.conda
+  sha256: 18edba1f97165527d25e4929f502dc67ca6095abf6fe35b33ed3a9bbe6025428
+  md5: 8b0e1e34f1e4c15ab787130ba8dd857f
   depends:
-  - __osx >=10.13
+  - __osx >=11.0
   license: LGPL-2.1-or-later
   run_exports:
     weak:
     - fribidi >=1.0.16,<2.0a0
-  size: 60923
-  timestamp: 1757438791418
+  size: 62219
+  timestamp: 1785913107748
 - conda: https://conda.anaconda.org/conda-forge/osx-64/gdk-pixbuf-2.44.7-hae309b2_0.conda
   sha256: b936e714e8b449ea1fe3f9773392794795b3c3142666d56806ee3c4c9e8f70e4
   md5: 4b55a5953b14e83c7a52d864ddfac733

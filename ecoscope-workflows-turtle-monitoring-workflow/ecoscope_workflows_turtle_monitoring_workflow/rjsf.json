@@ -75,7 +75,7 @@
           "title": "Report Template Path",
           "type": "string",
           "description": "Path or URL to the .docx Jinja2 template used for the turtle monitoring report.",
-          "default": "/Users/zak/Documents/w-dynamics/Curacao-Turtle_Monitoring/resources/templates/curacao_turtle_monitoring_template.docx",
+          "default": "https://raw.githubusercontent.com/wildlife-dynamics/curacao-turtle_monitoring/main/resources/templates/turtle_monitoring_template.docx",
           "ecoscope:advanced": true
         }
       },

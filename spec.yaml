@@ -14,8 +14,8 @@ requirements:
     channel: conda-forge
 
   - name: ecoscope-workflows-ext-curacao
-    version: "*"
-    channel: file:///tmp/ecoscope-workflows-custom/release/artifacts/
+    version: "0.0.1.*"
+    channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
 rjsf-overrides:
   properties:
@@ -49,7 +49,7 @@ rjsf-overrides:
     # ── Report Template ───────────────────────────────────────────────────────
     report_template_path.properties.var.title: Report Template Path
     report_template_path.properties.var.description: Path or URL to the .docx Jinja2 template used for the turtle monitoring report.
-    report_template_path.properties.var.default: "/Users/zak/Documents/w-dynamics/Curacao-Turtle_Monitoring/resources/templates/curacao_turtle_monitoring_template.docx"
+    report_template_path.properties.var.default: "https://raw.githubusercontent.com/wildlife-dynamics/curacao-turtle_monitoring/main/resources/templates/turtle_monitoring_template.docx"
     report_template_path.properties.var.ecoscope:advanced: true
 
 task-instance-defaults:
