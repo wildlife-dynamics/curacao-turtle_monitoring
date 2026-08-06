@@ -734,11 +734,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            df=nesting_colormap,
-            client=er_client,
-            use_icons=True,
-            cluster=True,
-            **(params.get("nesting_layer") or {}),
+            df=nesting_colormap, client=er_client, **(params.get("nesting_layer") or {})
         )
         .call()
     )
@@ -1578,6 +1574,11 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             fp_by_location=fp_by_location_df,
             template_path=report_template_path,
             output_dir=norm_output_dir,
+            total_nesting_count=total_nesting_count,
+            total_hatched_eggs=total_hatched_eggs,
+            hatching_success_pct=hatching_success_pct,
+            total_turtle_count=total_turtle_count,
+            total_fp_count=total_fp_count,
             **(params.get("docx_report") or {}),
         )
         .call()

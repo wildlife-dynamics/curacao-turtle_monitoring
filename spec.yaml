@@ -35,6 +35,7 @@ rjsf-overrides:
         title: Hour
 
     # ── Nesting Layer ────────────────────────────────────────────────────────
+    Nesting.properties.nesting_layer.properties.use_icons.default: false
     Nesting.properties.nesting_layer.properties.tooltip_columns.ecoscope:advanced: true
 
     # ── Turtle Layer ─────────────────────────────────────────────────────────
@@ -331,8 +332,6 @@ workflow:
         partial:
           df: ${{ workflow.nesting_colormap.return }}
           client: ${{ workflow.er_client.return }}
-          use_icons: true
-          cluster: true
 
       - id: nesting_map_view_state
         task: compute_fitted_view_state
@@ -695,6 +694,11 @@ workflow:
       fp_by_location: ${{ workflow.fp_by_location_df.return }}
       template_path: ${{ workflow.report_template_path.return }}
       output_dir: ${{ workflow.norm_output_dir.return }}
+      total_nesting_count: ${{ workflow.total_nesting_count.return }}
+      total_hatched_eggs: ${{ workflow.total_hatched_eggs.return }}
+      hatching_success_pct: ${{ workflow.hatching_success_pct.return }}
+      total_turtle_count: ${{ workflow.total_turtle_count.return }}
+      total_fp_count: ${{ workflow.total_fp_count.return }}
 
   # ── Dashboard ─────────────────────────────────────────────────────────────
 

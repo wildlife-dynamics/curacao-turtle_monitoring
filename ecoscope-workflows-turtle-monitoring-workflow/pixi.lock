@@ -4254,8 +4254,8 @@ environments:
 packages:
 - conda: /tmp/ecoscope-workflows-custom/release/artifacts/noarch/ecoscope-workflows-ext-curacao-0.0.1-pyh4616a5c_0.conda
   subdir: noarch
-  sha256: 5e30c64f5812c021a384424de5ef1ac3c4be8a4ebe460037bf2ac508ee159f14
-  md5: 3d0dba682138165c8fe46ecfed584a9d
+  sha256: 0c9435dea36846f437a46dada73b655e4040c9466afb60b4885285fae736ea37
+  md5: ff83982c4887857c6699e39928d47bd3
   depends:
   - python
   - pip
@@ -4266,8 +4266,8 @@ packages:
   - numpy
   channel: file:///tmp/ecoscope-workflows-custom/release/artifacts
   license: BSD-3-Clause
-  size: 22188
-  timestamp: 1785997461665
+  size: 21300
+  timestamp: 1786009289067
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
   build_number: 20
   sha256: 1dd3fffd892081df9726d7eb7e0dea6198962ba775bd88842135a4ddb4deb3c9

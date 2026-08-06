@@ -339,6 +339,13 @@
         "nesting_layer": {
           "additionalProperties": false,
           "properties": {
+            "use_icons": {
+              "default": false,
+              "title": "Use Icons",
+              "type": "boolean",
+              "description": "Use EarthRanger SVG icons instead of scatter points. When enabled, overlapping icons are automatically clustered.",
+              "ecoscope:advanced": true
+            },
             "scatter_radius": {
               "default": 5,
               "maximum": 50,
@@ -691,6 +698,7 @@
       },
       "nesting_layer": {
         "ui:order": [
+          "use_icons",
           "scatter_radius",
           "scatter_opacity",
           "icon_size",
