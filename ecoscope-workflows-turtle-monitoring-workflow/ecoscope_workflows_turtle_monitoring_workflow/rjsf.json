@@ -343,7 +343,7 @@
               "default": false,
               "title": "Use Icons",
               "type": "boolean",
-              "description": "Use EarthRanger SVG icons instead of scatter points.",
+              "description": "Use EarthRanger SVG icons instead of scatter points. When enabled, overlapping icons are automatically clustered.",
               "ecoscope:advanced": true
             },
             "scatter_radius": {
