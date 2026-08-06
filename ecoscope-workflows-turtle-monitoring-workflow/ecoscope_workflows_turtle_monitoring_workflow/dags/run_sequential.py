@@ -715,7 +715,11 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            df=nesting_colormap, client=er_client, **(params.get("nesting_layer") or {})
+            df=nesting_colormap,
+            client=er_client,
+            use_icons=True,
+            cluster=True,
+            **(params.get("nesting_layer") or {}),
         )
         .call()
     )
