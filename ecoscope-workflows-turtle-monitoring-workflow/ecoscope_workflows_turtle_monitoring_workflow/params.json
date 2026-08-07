@@ -356,6 +356,29 @@
           "description": "Point opacity (0\u20131). Only applies when icons are disabled.",
           "ecoscope:advanced": true
         },
+        "stroked": {
+          "default": false,
+          "title": "Stroked",
+          "type": "boolean",
+          "description": "Draw an outline around each point. Helps distinguish overlapping/adjacent points. Only applies when icons are disabled.",
+          "ecoscope:advanced": true
+        },
+        "scatter_line_color": {
+          "default": "#ffffff",
+          "title": "Scatter Line Color",
+          "type": "string",
+          "description": "Outline color (hex). Only applies when icons are disabled and stroked=True.",
+          "ecoscope:advanced": true
+        },
+        "scatter_line_width": {
+          "default": 1.0,
+          "maximum": 10.0,
+          "minimum": 0.0,
+          "title": "Scatter Line Width",
+          "type": "number",
+          "description": "Outline width in pixels. Only applies when icons are disabled and stroked=True.",
+          "ecoscope:advanced": true
+        },
         "icon_size": {
           "default": 32,
           "maximum": 128,
@@ -655,6 +678,9 @@
         "use_icons",
         "scatter_radius",
         "scatter_opacity",
+        "stroked",
+        "scatter_line_color",
+        "scatter_line_width",
         "icon_size",
         "tooltip_columns"
       ]

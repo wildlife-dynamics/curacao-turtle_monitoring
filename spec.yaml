@@ -333,6 +333,7 @@ workflow:
         partial:
           df: ${{ workflow.nesting_colormap.return }}
           client: ${{ workflow.er_client.return }}
+          legend_label_column: null
 
       - id: nesting_map_view_state
         task: compute_fitted_view_state

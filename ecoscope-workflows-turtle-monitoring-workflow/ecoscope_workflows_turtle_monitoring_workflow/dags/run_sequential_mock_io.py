@@ -734,7 +734,10 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            df=nesting_colormap, client=er_client, **(params.get("nesting_layer") or {})
+            df=nesting_colormap,
+            client=er_client,
+            legend_label_column=None,
+            **(params.get("nesting_layer") or {}),
         )
         .call()
     )
@@ -1305,7 +1308,11 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             unpack_depth=1,
         )
-        .partial(df=turtle_data, **(params.get("turtle_events_by_location_df") or {}))
+        .partial(
+            df=turtle_data,
+            client=er_client,
+            **(params.get("turtle_events_by_location_df") or {}),
+        )
         .call()
     )
 
