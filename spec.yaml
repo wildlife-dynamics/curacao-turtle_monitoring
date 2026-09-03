@@ -492,6 +492,9 @@ workflow:
           title: "Month"
         yaxis:
           title: "Nesting Events"
+        legend:
+          title:
+            text: "Species"
       widget_id: "nesting_over_time_widget"
 
   - id: persist_nesting_over_time
