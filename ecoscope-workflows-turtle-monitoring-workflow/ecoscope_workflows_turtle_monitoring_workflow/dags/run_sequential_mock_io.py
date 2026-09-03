@@ -1118,6 +1118,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
                 "barmode": "stack",
                 "xaxis": {"title": "Month"},
                 "yaxis": {"title": "Nesting Events"},
+                "legend": {"title": {"text": "Species"}},
             },
             widget_id="nesting_over_time_widget",
             **(params.get("nesting_over_time_chart") or {}),
