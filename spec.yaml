@@ -482,7 +482,7 @@ workflow:
       dataframe: ${{ workflow.nesting_data.return }}
       x_axis: time
       y_axis: count
-      category: event_type_display
+      category: specie
       agg_function: sum
       colors: ${{ workflow.chart_palette.return }}
       color_column: null
