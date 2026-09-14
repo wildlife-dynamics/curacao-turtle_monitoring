@@ -14,7 +14,7 @@ requirements:
     channel: conda-forge
 
   - name: ecoscope-workflows-ext-curacao
-    version: "0.0.6.*"
+    version: "0.0.7"
 
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
@@ -220,22 +220,39 @@ workflow:
     type: task-group
     description: Key statistics for the turtle monitoring period.
     tasks:
-      - name: Total Nesting Events Count
+      - name: Nests Registered Count
         id: total_nesting_count
         task: dataframe_count
         partial:
-          df: ${{ workflow.nesting_events_raw.return }}
+          df: ${{ workflow.suspected_nest_events.return }}
 
-      - name: Total Nesting Events Widget
+      - name: Nests Registered Widget
         id: total_nesting_widget
         task: create_single_value_widget_single_view
         skipif:
           conditions:
             - never
         partial:
-          title: "Total Nesting Events"
+          title: "Nests Registered"
           decimal_places: 0
           data: ${{ workflow.total_nesting_count.return }}
+
+      - name: Hatched Nests Count
+        id: hatched_nests_count
+        task: dataframe_count
+        partial:
+          df: ${{ workflow.hatching_events.return }}
+
+      - name: Hatched Nests Widget
+        id: hatched_nests_widget
+        task: create_single_value_widget_single_view
+        skipif:
+          conditions:
+            - never
+        partial:
+          title: "Hatched Nests"
+          decimal_places: 0
+          data: ${{ workflow.hatched_nests_count.return }}
 
       - name: Total Hatched Eggs
         id: total_hatched_eggs
@@ -701,6 +718,7 @@ workflow:
       template_path: ${{ workflow.report_template_path.return }}
       output_dir: ${{ workflow.norm_output_dir.return }}
       total_nesting_count: ${{ workflow.total_nesting_count.return }}
+      hatched_nests_count: ${{ workflow.hatched_nests_count.return }}
       total_hatched_eggs: ${{ workflow.total_hatched_eggs.return }}
       hatching_success_pct: ${{ workflow.hatching_success_pct.return }}
       total_turtle_count: ${{ workflow.total_turtle_count.return }}
@@ -727,4 +745,5 @@ workflow:
         - ${{ workflow.turtle_map_widget.return }}
         - ${{ workflow.turtle_events_by_location_widget.return }}
         - ${{ workflow.fp_by_location_widget.return }}
+        - ${{ workflow.hatched_nests_widget.return }}
       time_range: ${{ workflow.time_range.return }}

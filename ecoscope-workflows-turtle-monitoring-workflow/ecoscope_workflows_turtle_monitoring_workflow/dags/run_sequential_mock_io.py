@@ -494,7 +494,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             ],
             unpack_depth=1,
         )
-        .partial(df=nesting_events_raw, **(params.get("total_nesting_count") or {}))
+        .partial(df=suspected_nest_events, **(params.get("total_nesting_count") or {}))
         .call()
     )
 
@@ -511,10 +511,48 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             unpack_depth=1,
         )
         .partial(
-            title="Total Nesting Events",
+            title="Nests Registered",
             decimal_places=0,
             data=total_nesting_count,
             **(params.get("total_nesting_widget") or {}),
+        )
+        .call()
+    )
+
+    hatched_nests_count = (
+        task(dataframe_count)
+        .validate()
+        .set_task_instance_id("hatched_nests_count")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                any_is_empty_df,
+                any_dependency_skipped,
+            ],
+            unpack_depth=1,
+        )
+        .partial(df=hatching_events, **(params.get("hatched_nests_count") or {}))
+        .call()
+    )
+
+    hatched_nests_widget = (
+        task(create_single_value_widget_single_view)
+        .validate()
+        .set_task_instance_id("hatched_nests_widget")
+        .handle_errors()
+        .with_tracing()
+        .skipif(
+            conditions=[
+                never,
+            ],
+            unpack_depth=1,
+        )
+        .partial(
+            title="Hatched Nests",
+            decimal_places=0,
+            data=hatched_nests_count,
+            **(params.get("hatched_nests_widget") or {}),
         )
         .call()
     )
@@ -1583,6 +1621,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
             template_path=report_template_path,
             output_dir=norm_output_dir,
             total_nesting_count=total_nesting_count,
+            hatched_nests_count=hatched_nests_count,
             total_hatched_eggs=total_hatched_eggs,
             hatching_success_pct=hatching_success_pct,
             total_turtle_count=total_turtle_count,
@@ -1621,6 +1660,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
                 turtle_map_widget,
                 turtle_events_by_location_widget,
                 fp_by_location_widget,
+                hatched_nests_widget,
             ],
             time_range=time_range,
             **(params.get("dashboard") or {}),

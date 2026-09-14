@@ -305,6 +305,43 @@
       "required": [],
       "title": "Chart Colors"
     },
+    "all_events": {
+      "additionalProperties": false,
+      "properties": {
+        "event_states": {
+          "default": null,
+          "items": {
+            "type": "string",
+            "oneOf": [
+              {
+                "const": "new",
+                "title": "New"
+              },
+              {
+                "const": "active",
+                "title": "Active"
+              },
+              {
+                "const": "resolved",
+                "title": "Resolved"
+              },
+              {
+                "const": "review",
+                "title": "Review"
+              }
+            ]
+          },
+          "title": "Event State",
+          "type": "array",
+          "description": "Choose to analyze events with a certain state. If left empty, events of all states will be analyzed",
+          "uniqueItems": true,
+          "ecoscope:advanced": true
+        }
+      },
+      "required": [],
+      "type": "object",
+      "title": "Fetch All Events"
+    },
     "Nesting": {
       "type": "object",
       "description": "",
@@ -773,6 +810,7 @@
       "report_template_path",
       "base_maps",
       "chart_palette",
+      "all_events",
       "Nesting",
       "nesting_over_time_chart",
       "Turtle-Related Events"
