@@ -25,8 +25,8 @@
       "properties": {
         "data_source": {
           "$ref": "#/$defs/EarthRangerConnection",
-          "title": "",
-          "description": "Select one of your configured data sources."
+          "description": "Select one of your configured data sources.",
+          "title": ""
         }
       },
       "required": [
@@ -39,23 +39,19 @@
       "additionalProperties": false,
       "properties": {
         "since": {
+          "description": "The start time",
           "format": "date-time",
           "title": "Since",
-          "type": "string",
-          "description": "The start time"
+          "type": "string"
         },
         "until": {
+          "description": "The end time",
           "format": "date-time",
           "title": "Until",
-          "type": "string",
-          "description": "The end time"
+          "type": "string"
         },
         "timezone": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/TimezoneInfo"
-            }
-          ],
+          "$ref": "#/$defs/TimezoneInfo",
           "default": null,
           "title": "Timezone"
         }
@@ -100,8 +96,9 @@
               "min_zoom": 0
             }
           ],
+          "description": "Select tile layers to use as base layers in map outputs. The first layer in the list will be the bottommost layer displayed.",
+          "ecoscope:advanced": true,
           "items": {
-            "title": "Base Layer",
             "anyOf": [
               {
                 "description": "A tiled raster layer loaded on-demand from a URL template (e.g., base maps).",
@@ -119,8 +116,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -144,8 +141,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -169,8 +166,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -194,8 +191,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -219,8 +216,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Layer Opacity",
                     "type": "number"
                   }
@@ -242,8 +239,8 @@
                     "default": 1,
                     "description": "Set layer transparency from 1 (fully visible) to 0 (hidden).",
                     "ecoscope:advanced": true,
-                    "maximum": 1.0,
-                    "minimum": 0.0,
+                    "maximum": 1,
+                    "minimum": 0,
                     "title": "Custom Layer Opacity",
                     "type": "number"
                   },
@@ -263,12 +260,11 @@
                 "title": "Custom Layer (Advanced)",
                 "type": "object"
               }
-            ]
+            ],
+            "title": "Base Layer"
           },
           "title": " ",
-          "type": "array",
-          "description": "Select tile layers to use as base layers in map outputs. The first layer in the list will be the bottommost layer displayed.",
-          "ecoscope:advanced": true
+          "type": "array"
         }
       },
       "type": "object",
@@ -279,23 +275,20 @@
       "additionalProperties": false,
       "properties": {
         "colormap": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/QualitativeColormap"
-            }
-          ],
+          "$ref": "#/$defs/QualitativeColormap",
           "default": "Set1",
-          "title": "Colormap",
-          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition.",
+          "title": "Colormap"
         },
         "custom_colors": {
+          "default": [],
+          "description": "Leave empty to use the palette above. When provided, these colors are applied instead.",
+          "ecoscope:advanced": true,
           "items": {
             "type": "string"
           },
           "title": "Custom Colors",
-          "type": "array",
-          "description": "Leave empty to use the palette above. When provided, these colors are applied instead.",
-          "ecoscope:advanced": true
+          "type": "array"
         }
       },
       "type": "object",
@@ -307,6 +300,8 @@
       "properties": {
         "event_states": {
           "default": null,
+          "description": "Choose to analyze events with a certain state. If left empty, events of all states will be analyzed",
+          "ecoscope:advanced": true,
           "items": {
             "type": "string",
             "oneOf": [
@@ -330,9 +325,7 @@
           },
           "title": "Event State",
           "type": "array",
-          "description": "Choose to analyze events with a certain state. If left empty, events of all states will be analyzed",
-          "uniqueItems": true,
-          "ecoscope:advanced": true
+          "uniqueItems": true
         }
       },
       "required": [],
@@ -343,22 +336,19 @@
       "additionalProperties": false,
       "properties": {
         "colormap": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/QualitativeColormap"
-            }
-          ],
+          "$ref": "#/$defs/QualitativeColormap",
           "default": "Set1",
-          "title": "Colormap",
-          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition.",
+          "title": "Colormap"
         },
         "custom_colors": {
+          "default": [],
+          "description": "Leave empty to use the palette above. When provided, these colors are applied instead.",
           "items": {
             "type": "string"
           },
           "title": "Custom Colors",
-          "type": "array",
-          "description": "Leave empty to use the palette above. When provided, these colors are applied instead."
+          "type": "array"
         }
       },
       "required": [],
@@ -370,68 +360,69 @@
       "properties": {
         "use_icons": {
           "default": false,
-          "title": "Use Icons",
-          "type": "boolean",
           "description": "Use EarthRanger SVG icons instead of scatter points. When enabled, overlapping icons are automatically clustered.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Use Icons",
+          "type": "boolean"
         },
         "scatter_radius": {
           "default": 5,
+          "description": "Point radius in pixels. Only applies when icons are disabled.",
+          "ecoscope:advanced": true,
           "maximum": 50,
           "minimum": 1,
           "title": "Scatter Radius",
-          "type": "integer",
-          "description": "Point radius in pixels. Only applies when icons are disabled.",
-          "ecoscope:advanced": true
+          "type": "integer"
         },
         "scatter_opacity": {
           "default": 1.0,
+          "description": "Point opacity (0\u20131). Only applies when icons are disabled.",
+          "ecoscope:advanced": true,
           "maximum": 1.0,
           "minimum": 0.0,
           "title": "Scatter Opacity",
-          "type": "number",
-          "description": "Point opacity (0\u20131). Only applies when icons are disabled.",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "stroked": {
           "default": false,
-          "title": "Stroked",
-          "type": "boolean",
           "description": "Draw an outline around each point. Helps distinguish overlapping/adjacent points. Only applies when icons are disabled.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Stroked",
+          "type": "boolean"
         },
         "scatter_line_color": {
           "default": "#ffffff",
-          "title": "Scatter Line Color",
-          "type": "string",
           "description": "Outline color (hex). Only applies when icons are disabled and stroked=True.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Scatter Line Color",
+          "type": "string"
         },
         "scatter_line_width": {
           "default": 1.0,
+          "description": "Outline width in pixels. Only applies when icons are disabled and stroked=True.",
+          "ecoscope:advanced": true,
           "maximum": 10.0,
           "minimum": 0.0,
           "title": "Scatter Line Width",
-          "type": "number",
-          "description": "Outline width in pixels. Only applies when icons are disabled and stroked=True.",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "icon_size": {
           "default": 32,
+          "description": "Icon size in pixels. Only applies when icons are enabled.",
+          "ecoscope:advanced": true,
           "maximum": 128,
           "minimum": 8,
           "title": "Icon Size",
-          "type": "integer",
-          "description": "Icon size in pixels. Only applies when icons are enabled.",
-          "ecoscope:advanced": true
+          "type": "integer"
         },
         "tooltip_columns": {
+          "default": [],
+          "description": "Columns to show when hovering over a point. Leave empty to show all properties.",
           "items": {
             "type": "string"
           },
           "title": "Tooltip Columns",
-          "type": "array",
-          "description": "Columns to show when hovering over a point. Leave empty to show all properties."
+          "type": "array"
         }
       },
       "required": [],
@@ -443,9 +434,9 @@
       "properties": {
         "time_interval": {
           "default": "month",
+          "description": "How to group and bucket events over time on the chart.",
           "title": "Time Interval",
-          "type": "string",
-          "description": "How to group and bucket events over time on the chart."
+          "type": "string"
         }
       },
       "required": [],
@@ -456,22 +447,19 @@
       "additionalProperties": false,
       "properties": {
         "colormap": {
-          "allOf": [
-            {
-              "$ref": "#/$defs/QualitativeColormap"
-            }
-          ],
+          "$ref": "#/$defs/QualitativeColormap",
           "default": "Set1",
-          "title": "Colormap",
-          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition.",
+          "title": "Colormap"
         },
         "custom_colors": {
+          "default": [],
+          "description": "Leave empty to use the palette above. When provided, these colors are applied instead.",
           "items": {
             "type": "string"
           },
           "title": "Custom Colors",
-          "type": "array",
-          "description": "Leave empty to use the palette above. When provided, these colors are applied instead."
+          "type": "array"
         }
       },
       "required": [],
@@ -483,139 +471,140 @@
       "properties": {
         "opacity": {
           "default": 1.0,
+          "description": "Opacity of the layer, between 0 (transparent) and 1 (opaque).",
+          "ecoscope:advanced": true,
           "maximum": 1.0,
           "minimum": 0.0,
           "title": "Opacity",
-          "type": "number",
-          "description": "Opacity of the layer, between 0 (transparent) and 1 (opaque).",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "get_radius": {
           "default": 5,
+          "description": "Radius of each point, in the units specified by radius_units.",
+          "ecoscope:advanced": true,
           "maximum": 200,
           "minimum": 1,
           "title": "Get Radius",
-          "type": "integer",
-          "description": "Radius of each point, in the units specified by radius_units.",
-          "ecoscope:advanced": true
+          "type": "integer"
         },
         "radius_units": {
           "default": "pixels",
-          "title": "Radius Units",
-          "type": "string",
           "description": "Units for get_radius. 'pixels' keeps a fixed screen size; 'meters' scales with zoom.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Radius Units",
+          "type": "string"
         },
         "radius_scale": {
           "default": 1.0,
+          "description": "A global radius multiplier applied to all points.",
+          "ecoscope:advanced": true,
           "minimum": 0.0,
           "title": "Radius Scale",
-          "type": "number",
-          "description": "A global radius multiplier applied to all points.",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "radius_min_pixels": {
           "default": 0.0,
+          "description": "Minimum point radius in pixels. Prevents points from becoming invisible at low zoom.",
+          "ecoscope:advanced": true,
           "minimum": 0.0,
           "title": "Radius Min Pixels",
-          "type": "number",
-          "description": "Minimum point radius in pixels. Prevents points from becoming invisible at low zoom.",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "radius_max_pixels": {
           "default": null,
-          "title": "Radius Max Pixels",
-          "type": "number",
           "description": "Maximum point radius in pixels. Leave empty for no cap.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Radius Max Pixels",
+          "type": "number"
         },
         "get_line_color": {
           "default": null,
-          "title": "Get Line Color",
-          "type": "string",
           "description": "Outline color \u2014 a column name with RGBA values, or a CSS hex string (e.g. '#000000'). Takes effect when stroked=true.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Get Line Color",
+          "type": "string"
         },
         "get_line_width": {
           "default": 1.0,
+          "description": "Outline width in line_width_units. Takes effect when stroked=true.",
+          "ecoscope:advanced": true,
           "minimum": 0.0,
           "title": "Get Line Width",
-          "type": "number",
-          "description": "Outline width in line_width_units. Takes effect when stroked=true.",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "line_width_units": {
           "default": "pixels",
-          "title": "Line Width Units",
-          "type": "string",
           "description": "Units for get_line_width. 'pixels' keeps a fixed screen width; 'meters' scales with zoom.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Line Width Units",
+          "type": "string"
         },
         "line_width_scale": {
           "default": 1.0,
+          "description": "A global line width multiplier applied to all outlines.",
+          "ecoscope:advanced": true,
           "minimum": 0.0,
           "title": "Line Width Scale",
-          "type": "number",
-          "description": "A global line width multiplier applied to all outlines.",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "line_width_min_pixels": {
           "default": 0.0,
+          "description": "Minimum outline width in pixels.",
+          "ecoscope:advanced": true,
           "minimum": 0.0,
           "title": "Line Width Min Pixels",
-          "type": "number",
-          "description": "Minimum outline width in pixels.",
-          "ecoscope:advanced": true
+          "type": "number"
         },
         "line_width_max_pixels": {
           "default": null,
-          "title": "Line Width Max Pixels",
-          "type": "number",
           "description": "Maximum outline width in pixels. Leave empty for no cap.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Line Width Max Pixels",
+          "type": "number"
         },
         "tooltip_columns": {
+          "default": [],
+          "description": "Columns to show when hovering over a point. Leave empty to show all properties.",
           "items": {
             "type": "string"
           },
           "title": "Tooltip Columns",
-          "type": "array",
-          "description": "Columns to show when hovering over a point. Leave empty to show all properties."
+          "type": "array"
         },
         "filled": {
           "default": true,
-          "title": "Filled",
-          "type": "boolean",
           "description": "Fill each object with the assigned color.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Filled",
+          "type": "boolean"
         },
         "stroked": {
           "default": false,
-          "title": "Stroked",
-          "type": "boolean",
           "description": "Draw an outline around each point. Configure color and width with get_line_color and get_line_width.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Stroked",
+          "type": "boolean"
         },
         "billboard": {
           "default": false,
-          "title": "Billboard",
-          "type": "boolean",
           "description": "If true, points always face the camera regardless of map tilt.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Billboard",
+          "type": "boolean"
         },
         "auto_highlight": {
           "default": false,
-          "title": "Auto Highlight",
-          "type": "boolean",
           "description": "Highlight the point under the cursor when hovering.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Auto Highlight",
+          "type": "boolean"
         },
         "pickable": {
           "default": true,
-          "title": "Pickable",
-          "type": "boolean",
           "description": "Allow points to respond to pointer and touch events.",
-          "ecoscope:advanced": true
+          "ecoscope:advanced": true,
+          "title": "Pickable",
+          "type": "boolean"
         }
       },
       "required": [],
