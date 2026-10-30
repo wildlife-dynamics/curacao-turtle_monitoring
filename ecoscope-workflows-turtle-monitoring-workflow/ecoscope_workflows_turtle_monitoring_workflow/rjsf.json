@@ -280,7 +280,8 @@
         "colormap": {
           "$ref": "#/$defs/QualitativeColormap",
           "default": "Set1",
-          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+          "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition.",
+          "title": "Colormap"
         },
         "custom_colors": {
           "default": [],
@@ -345,7 +346,8 @@
             "colormap": {
               "$ref": "#/$defs/QualitativeColormap",
               "default": "Set1",
-              "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+              "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition.",
+              "title": "Colormap"
             },
             "custom_colors": {
               "default": [],
@@ -485,7 +487,8 @@
             "colormap": {
               "$ref": "#/$defs/QualitativeColormap",
               "default": "Set1",
-              "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition."
+              "description": "Choose a color palette. For low-cardinality data any palette works; for high-cardinality data use tab20, tab20b, or tab20c to reduce color repetition.",
+              "title": "Colormap"
             },
             "custom_colors": {
               "default": [],
