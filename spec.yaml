@@ -6,7 +6,7 @@ requirements:
     channel: https://repo.prefix.dev/ecoscope-workflows/
 
   - name: ecoscope-workflows-ext-custom
-    version: "0.1.0rc24"
+    version: "0.1.5"
     channel: https://repo.prefix.dev/ecoscope-workflows-custom/
 
   - name: pydeck
@@ -353,7 +353,7 @@ workflow:
           legend_label_column: null
 
       - id: nesting_map_view_state
-        task: compute_fitted_view_state
+        task: ecoscope_workflows_ext_curacao.tasks.compute_fitted_view_state
         partial:
           geo_layers: ${{ workflow.nesting_layer.return }}
           max_zoom: 15
@@ -549,7 +549,7 @@ workflow:
           df: ${{ workflow.turtle_colormap.return }}
 
       - id: turtle_map_view_state
-        task: compute_fitted_view_state
+        task: ecoscope_workflows_ext_curacao.tasks.compute_fitted_view_state
         partial:
           geo_layers: ${{ workflow.turtle_layer.return }}
           max_zoom: 15

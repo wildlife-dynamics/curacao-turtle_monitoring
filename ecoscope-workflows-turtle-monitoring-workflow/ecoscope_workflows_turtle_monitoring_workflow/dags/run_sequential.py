@@ -35,7 +35,7 @@ from ecoscope_workflows_ext_curacao.tasks import (
     apply_qualitative_color_map as apply_qualitative_color_map,
 )
 from ecoscope_workflows_ext_curacao.tasks import (
-    compute_fitted_view_state as compute_fitted_view_state,
+    compute_fitted_view_state as compute_fitted_view_state_1,
 )
 from ecoscope_workflows_ext_curacao.tasks import (
     compute_hatching_success_pct as compute_hatching_success_pct,
@@ -762,7 +762,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
     )
 
     nesting_map_view_state = (
-        task(compute_fitted_view_state)
+        task(compute_fitted_view_state_1)
         .validate()
         .set_task_instance_id("nesting_map_view_state")
         .handle_errors()
@@ -1226,7 +1226,7 @@ def main(params: dict[str, Any], validate_params_schema: bool = True):
     )
 
     turtle_map_view_state = (
-        task(compute_fitted_view_state)
+        task(compute_fitted_view_state_1)
         .validate()
         .set_task_instance_id("turtle_map_view_state")
         .handle_errors()
